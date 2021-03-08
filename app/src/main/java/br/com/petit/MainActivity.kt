@@ -14,15 +14,21 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import br.com.petit.ui.screen.MainScreen
 import br.com.petit.ui.theme.PetitTheme
+import dagger.hilt.android.AndroidEntryPoint
 
 
 @ExperimentalFoundationApi
+@AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
         setContent {
-            App()
+            App(
+
+            )
         }
+
     }
 }
 

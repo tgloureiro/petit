@@ -38,11 +38,10 @@ import dev.chrisbanes.accompanist.coil.CoilImage
 
 @ExperimentalFoundationApi
 @Composable
-fun MainScreen(navController: NavController) {
-    val viewModel: MainScreenViewModel = viewModel()
+fun MainScreen(viewModel: MainScreenViewModel) {
     var densitySelector by rememberSaveable { mutableStateOf(ListDensity.TWO) }
 
-    val pets by viewModel.pets.collectAsState()
+    val pets by viewModel.pets.collectAsState(listOf())
 
     Scaffold(topBar = {
         MainAppBar(
@@ -77,7 +76,7 @@ fun MainScreen(navController: NavController) {
                     Column(modifier = Modifier
                         .padding(horizontal = 8.dp, vertical = 4.dp)
                         .clickable {
-                            navController.navigate("detail/${pet.id}")
+                            viewModel.onPetSelected(pet.id)
                         }) {
 
                         CoilImage(
@@ -147,8 +146,9 @@ fun MainScreen(navController: NavController) {
 @Composable
 @ExperimentalFoundationApi
 fun MainScreenPreview() {
-    val navController = rememberNavController()
+    val viewModel : MainScreenViewModel = viewModel()
+
     PetitTheme() {
-        MainScreen(navController = navController)
+        MainScreen(viewModel)
     }
 }

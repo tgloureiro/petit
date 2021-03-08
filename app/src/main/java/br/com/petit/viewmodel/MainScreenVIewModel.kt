@@ -1,30 +1,42 @@
 package br.com.petit.viewmodel
 
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.platform.LocalContext
+import androidx.hilt.lifecycle.HiltViewModelFactory
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.NavBackStackEntry
+import br.com.petit.bloc.Details
+import br.com.petit.bloc.Navigator
 import br.com.petit.model.Pet
 import br.com.petit.model.PetGender
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
+import br.com.petit.repository.LocalPetRepository
+import br.com.petit.repository.PetRepository
+import br.com.petit.repository.StaticPetRepository
+import dagger.assisted.Assisted
+import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.Flow
+import javax.inject.Inject
 
-class MainScreenViewModel : ViewModel() {
+@HiltViewModel
+class MainScreenViewModel  @Inject constructor(
+        private val petRepository: LocalPetRepository,
+        private val navigator: Navigator
+) :
+    ViewModel() {
+    val pets: Flow<List<Pet>> = petRepository.fetchPets()
 
-    private val petList = listOf(
-        Pet( 0,"Rudy", "https://images.dog.ceo/breeds/spaniel-welsh/n02102177_3639.jpg", PetGender.MALE, "Description"),
-        Pet( 1,"Holly", "https://images.dog.ceo/breeds/kuvasz/n02104029_4091.jpg", PetGender.FEMALE, "Description"),
-        Pet(2,"Maddie", "https://images.dog.ceo/breeds/cotondetulear/IMG_20160830_202631573.jpg", PetGender.FEMALE, "Description"),
-        Pet(3,"Roxy", "https://images.dog.ceo/breeds/pointer-german/n02100236_1553.jpg", PetGender.FEMALE, "Description"),
-        Pet(4,"Zoey", "https://images.dog.ceo/breeds/retriever-chesapeake/n02099849_264.jpg", PetGender.FEMALE, "Description"),
-        Pet(5,"Duke", "https://images.dog.ceo/breeds/cattledog-australian/IMG_1688.jpg", PetGender.MALE, "Description"),
-    )
+    fun onPetSelected(petId:Long){
+        navigator.navigateTo(Details(petId))
+    }
 
-    private val _pets = MutableStateFlow(petList)
-    val pets: StateFlow<List<Pet>> = _pets
+}
 
-    fun deleteFirst(){
-        val petList = pets.value.toMutableList()
-        if(petList.isNotEmpty()) {
-            petList.removeFirst()
-            _pets.value = petList.toList()
+class MainScreenViewModelFactory(private val repository: LocalPetRepository, private val navigator: Navigator) : ViewModelProvider.Factory {
+    override fun <T : ViewModel?> create(modelClass: Class<T>): T {
+        if (modelClass.isAssignableFrom(MainScreenViewModel::class.java)) {
+            return MainScreenViewModel(repository,navigator) as T
         }
+        throw IllegalArgumentException("Unknown ViewModel class")
     }
 }

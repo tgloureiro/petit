@@ -2,12 +2,15 @@ package br.com.petit.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
+import br.com.petit.bloc.Navigator
+import br.com.petit.bloc.PopBackStack
 import br.com.petit.model.Pet
 import br.com.petit.model.PetGender
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 
-class SuccessfulAdoptedScreenViewModel(private val petId: Long, private val navigationViewModel: NavigationViewModel) : ViewModel() {
+class SuccessfulAdoptedScreenViewModel(private val petId: Long,
+                                       private val navigator: Navigator) : ViewModel() {
 
     private val petList = listOf(
         Pet( 0,"Rudy", "https://images.dog.ceo/breeds/spaniel-welsh/n02102177_3639.jpg", PetGender.MALE, "Description"),
@@ -24,7 +27,7 @@ class SuccessfulAdoptedScreenViewModel(private val petId: Long, private val navi
     val pet: StateFlow<Pet> = _pet
 
     fun onBackPress(){
-        navigationViewModel.navigateTo(PopBackStack)
+        navigator.navigateTo(PopBackStack)
     }
 
     fun onCancelButtonClick(){
@@ -32,10 +35,10 @@ class SuccessfulAdoptedScreenViewModel(private val petId: Long, private val navi
     }
 }
 
-class SuccessfulAdoptedScreenViewModelFactory(private val petId: Long, private val navigationViewModel: NavigationViewModel) : ViewModelProvider.Factory {
+class SuccessfulAdoptedScreenViewModelFactory(private val petId: Long, private val navigator: Navigator) : ViewModelProvider.Factory {
     override fun <T : ViewModel?> create(modelClass: Class<T>): T {
         if (modelClass.isAssignableFrom(SuccessfulAdoptedScreenViewModel::class.java)) {
-            return SuccessfulAdoptedScreenViewModel(petId,navigationViewModel) as T
+            return SuccessfulAdoptedScreenViewModel(petId,navigator) as T
         }
         throw IllegalArgumentException("Unknown ViewModel class")
     }

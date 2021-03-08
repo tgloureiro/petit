@@ -1,5 +1,9 @@
 package br.com.petit.model
 
+import androidx.room.ColumnInfo
+import androidx.room.Entity
+import androidx.room.PrimaryKey
+
 /*
  * Disclaimer: I don't know if we should technically call it a gender
  */
@@ -8,11 +12,11 @@ enum class PetGender{
     FEMALE,
 }
 
-
+@Entity(tableName = "pet")
 data class Pet(
-    val id: Long,
-    val name:String,
-    val pictureUrl: String,
-    val petGender: PetGender,
-    val description: String,
+    @PrimaryKey val id: Long,
+    @ColumnInfo val name:String,
+    @ColumnInfo(name = "picture_url") val pictureUrl: String,
+    @ColumnInfo(name = "pet_gender")  val petGender: PetGender,
+    @ColumnInfo(name = "description") val description: String?,
 )

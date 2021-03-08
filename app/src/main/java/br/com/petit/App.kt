@@ -1,29 +1,30 @@
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.rememberCoroutineScope
-import androidx.lifecycle.ViewModelProvider
+import androidx.compose.ui.platform.LocalContext
+import androidx.hilt.navigation.HiltViewModelFactory
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavType
 import androidx.navigation.compose.*
+import br.com.petit.bloc.Navigator
 import br.com.petit.ui.screen.MainScreen
 import br.com.petit.ui.theme.PetitTheme
 import br.com.petit.viewmodel.*
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 import java.util.logging.Level
 import java.util.logging.Logger
 
 @Composable
 @ExperimentalFoundationApi
 fun App() {
+
     val coroutineScope = rememberCoroutineScope()
 
-    val navViewModel : NavigationViewModel = viewModel()
+    val navigator : Navigator = Navigator(
+        coroutineScope
+    )
     val navController = rememberNavController()
 
     coroutineScope.launch {
@@ -45,14 +46,21 @@ fun App() {
 
     PetitTheme {
         NavHost(navController, startDestination = "main") {
-            composable("main") { MainScreen(navController) }
+            composable("main") {
+                backStackEntry ->
+                val viewModel = viewModel<MainScreenViewModel>(
+                    factory = HiltViewModelFactory(
+                        LocalContext.current, backStackEntry)
+                )
+                MainScreen(viewModel)
+            }
             composable("detail/{petId}",
                 arguments = listOf(navArgument("petId") { type = NavType.LongType }))
             { backStackEntry ->
                 val petId = backStackEntry.arguments?.getLong("petId")
 
                 if(petId!=null) {
-                    val viewModelFactory = DetailsScreenViewModelFactory(petId,navViewModel)
+                    val viewModelFactory = DetailsScreenViewModelFactory(petId, navigator)
                     val viewModel: DetailsScreenViewModel = viewModel(factory = viewModelFactory)
                     DetailsScreen(viewModel)
                 }else{
@@ -65,7 +73,7 @@ fun App() {
                 val petId = backStackEntry.arguments?.getLong("petId")
 
                 if(petId!=null) {
-                    val viewModelFactory = SuccessfulAdoptedScreenViewModelFactory(petId, navViewModel)
+                    val viewModelFactory = SuccessfulAdoptedScreenViewModelFactory(petId, navigator)
                     val viewModel: SuccessfulAdoptedScreenViewModel = viewModel(factory = viewModelFactory)
                     SuccessfulAdoptionScreen(viewModel)
                 }else{
