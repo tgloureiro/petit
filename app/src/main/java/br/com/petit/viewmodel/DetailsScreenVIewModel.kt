@@ -1,12 +1,14 @@
 package br.com.petit.viewmodel
 
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.viewmodel.compose.viewModel
 import br.com.petit.model.Pet
 import br.com.petit.model.PetGender
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 
-class MainScreenViewModel : ViewModel() {
+class DetailsScreenViewModel(private val petId: Long, private val navigationViewModel: NavigationViewModel) : ViewModel() {
 
     private val petList = listOf(
         Pet( 0,"Rudy", "https://images.dog.ceo/breeds/spaniel-welsh/n02102177_3639.jpg", PetGender.MALE, "Description"),
@@ -17,14 +19,24 @@ class MainScreenViewModel : ViewModel() {
         Pet(5,"Duke", "https://images.dog.ceo/breeds/cattledog-australian/IMG_1688.jpg", PetGender.MALE, "Description"),
     )
 
-    private val _pets = MutableStateFlow(petList)
-    val pets: StateFlow<List<Pet>> = _pets
+    private val petInstance = petList[petId.toInt()]
+    private val _pet = MutableStateFlow(petInstance)
+    val pet: StateFlow<Pet> = _pet
 
-    fun deleteFirst(){
-        val petList = pets.value.toMutableList()
-        if(petList.isNotEmpty()) {
-            petList.removeFirst()
-            _pets.value = petList.toList()
+    fun onBackPress(){
+        navigationViewModel.navigateTo(PopBackStack)
+    }
+
+    fun onAdoptButtonClick(){
+        navigationViewModel.navigateTo(SuccessfulAdoption(petId))
+    }
+}
+
+class DetailsScreenViewModelFactory(private val petId: Long, private val navigationViewModel: NavigationViewModel) : ViewModelProvider.Factory {
+    override fun <T : ViewModel?> create(modelClass: Class<T>): T {
+        if (modelClass.isAssignableFrom(DetailsScreenViewModel::class.java)) {
+            return DetailsScreenViewModel(petId,navigationViewModel) as T
         }
+        throw IllegalArgumentException("Unknown ViewModel class")
     }
 }

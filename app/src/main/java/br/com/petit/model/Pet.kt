@@ -1,17 +1,18 @@
 package br.com.petit.model
 
 /*
- * Disclaimer: I don't know if we shoud technicall call a gender
+ * Disclaimer: I don't know if we should technically call it a gender
  */
 enum class PetGender{
-    male,
-    female,
+    MALE,
+    FEMALE,
 }
 
 
 data class Pet(
+    val id: Long,
     val name:String,
     val pictureUrl: String,
     val petGender: PetGender,
-    val description: String
+    val description: String,
 )
