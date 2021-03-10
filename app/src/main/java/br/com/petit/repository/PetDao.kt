@@ -10,20 +10,15 @@ interface PetDao {
     @Query("SELECT * FROM pet")
     fun getAll(): Flow<List<Pet>>
 
-
+    @Query("SELECT * FROM pet WHERE id = :petId LIMIT 1")
+    fun fetchPet(petId: Long): Flow<Pet>
 
     @Transaction
     @Query("SELECT * FROM Adoption LIMIT 1")
     suspend fun getAdoptedPet(): Adoption?
 
-    @Insert
-    fun adopt(adoption: Adoption)
-
-    //@Query("SELECT * FROM pet WHERE id IN (:petIds)")
-    //fun loadAllByIds(petIds: IntArray): List<Pet>
-
-    //@Query("SELECT * FROM pet WHERE name LIKE :name LIMIT 1")
-    //fun findByName(name: String): Pet
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun adopt(adoption: Adoption)
 
     @Insert
     fun insertAll(vararg users: Pet)

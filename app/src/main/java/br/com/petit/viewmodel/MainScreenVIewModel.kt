@@ -1,42 +1,43 @@
 package br.com.petit.viewmodel
 
-import androidx.compose.runtime.Composable
-import androidx.compose.ui.platform.LocalContext
-import androidx.hilt.lifecycle.HiltViewModelFactory
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.ViewModelProvider
-import androidx.navigation.NavBackStackEntry
-import br.com.petit.bloc.Details
-import br.com.petit.bloc.Navigator
-import br.com.petit.model.Pet
-import br.com.petit.model.PetGender
-import br.com.petit.repository.LocalPetRepository
-import br.com.petit.repository.PetRepository
-import br.com.petit.repository.StaticPetRepository
-import dagger.assisted.Assisted
+import br.com.petit.bloc.PetListBloc
+import br.com.petit.navigator.DetailsRoute
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.Flow
+import tech.tiagoloureiro.navigator.Navigate
+import tech.tiagoloureiro.navigator.NavigatorBloc
+import java.util.logging.Level
+import java.util.logging.Logger
 import javax.inject.Inject
 
 @HiltViewModel
 class MainScreenViewModel  @Inject constructor(
-        private val petRepository: LocalPetRepository,
-        private val navigator: Navigator
-) :
-    ViewModel() {
-    val pets: Flow<List<Pet>> = petRepository.fetchPets()
+    val petListBloc: PetListBloc,
+    val navigator: NavigatorBloc
+) : ViewModel() {
 
-    fun onPetSelected(petId:Long){
-        navigator.navigateTo(Details(petId))
+    init{
+        Logger.getLogger("MainScreenViewModel").log(
+            Level.INFO, "MainScreenViewModel created")
     }
 
+
+    override fun onCleared() {
+        super.onCleared()
+        Logger.getLogger("MainScreenViewModel").log(
+            Level.INFO, "MainScreenViewModel cleared!!!")
+    }
 }
 
-class MainScreenViewModelFactory(private val repository: LocalPetRepository, private val navigator: Navigator) : ViewModelProvider.Factory {
+/*
+class MainViewModelFactory(private val petRepository: PetRepository,
+                           private val navigator: NavigatorBloc
+) : ViewModelProvider.Factory {
     override fun <T : ViewModel?> create(modelClass: Class<T>): T {
         if (modelClass.isAssignableFrom(MainScreenViewModel::class.java)) {
-            return MainScreenViewModel(repository,navigator) as T
+            @Suppress("UNCHECKED_CAST")
+            return MainScreenViewModel(petRepository,navigator) as T
         }
-        throw IllegalArgumentException("Unknown ViewModel class")
+        throw IllegalArgumentException("Unable to construct ViewModel")
     }
-}
+}*/

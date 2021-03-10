@@ -1,58 +1,77 @@
 package br.com.petit.viewmodel
 
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.ViewModelProvider
-import br.com.petit.bloc.Navigator
-import br.com.petit.bloc.PopBackStack
-import br.com.petit.bloc.SuccessfulAdoption
+import androidx.lifecycle.*
+import br.com.petit.navigator.SuccessfulAdoptionRoute
 import br.com.petit.model.Adoption
 import br.com.petit.model.Pet
-import br.com.petit.model.PetGender
-import br.com.petit.repository.LocalPetRepository
+import br.com.petit.repository.PetRepository
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.launch
+import tech.tiagoloureiro.navigator.Navigate
+import tech.tiagoloureiro.navigator.NavigatorBloc
+import tech.tiagoloureiro.navigator.PopRoute
+import java.util.logging.Level
+import java.util.logging.Logger
 import javax.inject.Inject
 
-class DetailsScreenViewModel @Inject constructor(private val petId: Long,
-                                                 private val navigator: Navigator,
-                                                 private val petRepository: LocalPetRepository
-) : ViewModel() {
+/*sealed class PetState
+object Loading : PetState()
+data class Loaded(val pet:Pet) : PetState()
+*/
 
-    private val petList = listOf(
-        Pet( 0,"Rudy",
-            "https://images.dog.ceo/breeds/spaniel-welsh/n02102177_3639.jpg", PetGender.MALE, "Description"),
-        Pet( 1,"Holly",
-            "https://images.dog.ceo/breeds/kuvasz/n02104029_4091.jpg", PetGender.FEMALE, "Description"),
-        Pet(2,"Maddie",
-            "https://images.dog.ceo/breeds/cotondetulear/IMG_20160830_202631573.jpg", PetGender.FEMALE, "Description"),
-        Pet(3,"Roxy",
-            "https://images.dog.ceo/breeds/pointer-german/n02100236_1553.jpg", PetGender.FEMALE, "Description"),
-        Pet(4,"Zoey",
-            "https://images.dog.ceo/breeds/retriever-chesapeake/n02099849_264.jpg", PetGender.FEMALE, "Description"),
-        Pet(5,"Duke",
-            "https://images.dog.ceo/breeds/cattledog-australian/IMG_1688.jpg", PetGender.MALE, "Description"),
-    )
+class DetailsScreenViewModel : ViewModel(), LifecycleObserver {
+
+    /*
+    init{
+        Logger.getLogger("DetailsScreenViewModel").log(
+            Level.INFO, "DetailsScreenViewModel created")
+    }
 
 
-    private val petInstance = petList[petId.toInt()]
-    private val _pet = MutableStateFlow(petInstance)
-    val pet: StateFlow<Pet> = _pet
+    private val  _pet = MutableStateFlow<PetState>(Loading)
+    val pet: StateFlow<PetState> = _pet
+
+    private val job = petRepository.fetchPet(petId).onEach {
+        delay(3000)
+        _pet.emit(Loaded(it))
+    }.launchIn(viewModelScope)
 
     fun onBackPress(){
-        navigator.navigateTo(PopBackStack)
+        navigator.add(PopRoute)
     }
 
     fun onAdoptButtonClick(){
-        petRepository.adopt(Adoption(0,pet.value))
-        navigator.navigateTo(SuccessfulAdoption(petId))
+        val value = pet.value
+        if(value is Loaded){
+            viewModelScope.launch {
+                petRepository.adopt(Adoption(0, value.pet))
+                navigator.add(Navigate(SuccessfulAdoptionRoute(petId)))
+            }
+        }
     }
-}
 
-class DetailsScreenViewModelFactory(private val petId: Long, private val navigator: Navigator, private val repository: LocalPetRepository) : ViewModelProvider.Factory {
+    override fun onCleared() {
+        super.onCleared()
+        Logger.getLogger("DetailsScreenViewModel").log(
+            Level.INFO, "DetailsScreenViewModel cleared!!!")
+    }
+
+*/
+}
+/*
+class DetailsScreenViewModelFactory(private val petId: Long, private val petRepository: PetRepository,
+                           private val navigator: NavigatorBloc
+) : ViewModelProvider.Factory {
     override fun <T : ViewModel?> create(modelClass: Class<T>): T {
         if (modelClass.isAssignableFrom(DetailsScreenViewModel::class.java)) {
-            return DetailsScreenViewModel(petId,navigator,repository) as T
+            @Suppress("UNCHECKED_CAST")
+            return DetailsScreenViewModel(petId,navigator,petRepository) as T
         }
-        throw IllegalArgumentException("Unknown ViewModel class")
+        throw IllegalArgumentException("Unable to construct ViewModel")
     }
 }
+ */

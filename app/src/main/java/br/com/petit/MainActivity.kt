@@ -1,34 +1,20 @@
 package br.com.petit
 
 import App
-import DetailsScreen
-import SuccessfulAdoptionScreen
-import android.os.Bundle
-import androidx.activity.compose.setContent
-import androidx.appcompat.app.AppCompatActivity
-import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.tooling.preview.Preview
-import androidx.navigation.compose.NavHost
-import androidx.navigation.compose.composable
-import androidx.navigation.compose.rememberNavController
-import br.com.petit.ui.screen.MainScreen
-import br.com.petit.ui.theme.PetitTheme
+import br.com.petit.navigator.NavigationActivity
+import br.com.petit.provider.BlocProvider
+import br.com.petit.repository.StaticPetRepository
 import dagger.hilt.android.AndroidEntryPoint
+import tech.tiagoloureiro.navigator.NavigatorBloc
+import javax.inject.Inject
 
-
-@ExperimentalFoundationApi
 @AndroidEntryPoint
-class MainActivity : AppCompatActivity() {
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
+class MainActivity : NavigationActivity() {
 
-        setContent {
-            App(
+    override val content: @Composable (navigator: NavigatorBloc) -> Unit = {
+            navigator ->
 
-            )
-        }
-
+            App(navigator)
     }
 }
-

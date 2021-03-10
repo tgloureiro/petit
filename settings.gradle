@@ -8,3 +8,5 @@ dependencyResolutionManagement {
 }
 rootProject.name = "Petit"
 include ':app'
+include ':bloc'
+include ':navigator'

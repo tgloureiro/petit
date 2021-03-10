@@ -28,9 +28,21 @@ import dev.chrisbanes.accompanist.coil.CoilImage
 
 @Composable
 fun SuccessfulAdoptionScreen(viewModel: SuccessfulAdoptedScreenViewModel) {
-
+ /*
     val pet by viewModel.pet.collectAsState()
+    if(pet == null){
+        Scaffold( topBar = {
+            TopAppBar(
+                title = {
+                    Text("Adopted Pet: Error")
+                },
+                backgroundColor = MaterialTheme.colors.background
+            )
+        }) {
+            Text("Error: adopted pet not loaded.")
 
+        }
+    }else{
     Scaffold( topBar = {
         TopAppBar(
             title = {
@@ -43,9 +55,11 @@ fun SuccessfulAdoptionScreen(viewModel: SuccessfulAdoptedScreenViewModel) {
 
         )
     }) {
-        Column(modifier = Modifier
-            .fillMaxHeight()
-            .verticalScroll(rememberScrollState())) {
+        Column(
+            modifier = Modifier
+                .fillMaxHeight()
+                .verticalScroll(rememberScrollState())
+        ) {
             //title
             Text(
                 modifier = Modifier.padding(
@@ -54,14 +68,14 @@ fun SuccessfulAdoptionScreen(viewModel: SuccessfulAdoptedScreenViewModel) {
                     top = 16.dp,
                     bottom = 16.dp
                 ),
-                text = "Congratulations! You adopted ${pet.name}",
+                text = "Congratulations! You adopted ${pet!!.name}",
                 fontSize = 36.sp,
                 fontWeight = FontWeight.Bold,
                 textAlign = TextAlign.Center
             )
             //img/
             CoilImage(
-                data = pet.pictureUrl,
+                data = pet!!.pictureUrl,
                 "Grid",
                 modifier = Modifier
                     .padding(horizontal = 16.dp, vertical = 4.dp)
@@ -99,7 +113,9 @@ fun SuccessfulAdoptionScreen(viewModel: SuccessfulAdoptedScreenViewModel) {
             )
             //footer button
             Button(
-                onClick = {},
+                onClick = {
+                          viewModel.onCancelButtonClick()
+                },
                 modifier = Modifier
                     .padding(horizontal = 24.dp, vertical = 36.dp)
                     .fillMaxWidth(),
@@ -115,10 +131,15 @@ fun SuccessfulAdoptionScreen(viewModel: SuccessfulAdoptedScreenViewModel) {
                 )
             }
         }
-
+    }
 
 
     }
+
+
+  */
+
+
 }
 
 

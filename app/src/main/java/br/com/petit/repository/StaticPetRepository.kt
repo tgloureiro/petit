@@ -3,7 +3,12 @@ package br.com.petit.repository
 import br.com.petit.model.Adoption
 import br.com.petit.model.Pet
 import br.com.petit.model.PetGender
+import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.*
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.selects.select
 import javax.inject.Inject
 
 class StaticPetRepository  @Inject constructor(): PetRepository{
@@ -18,6 +23,9 @@ class StaticPetRepository  @Inject constructor(): PetRepository{
     )
 
     private val _pets = MutableStateFlow(petList)
+    private val _selectedPet = MutableSharedFlow<Pet>(replay = 1)
+
+    private var adoption: Adoption? = null
 
     override suspend fun insertPet(pet: Pet) {
         TODO("Not yet implemented")
@@ -27,12 +35,26 @@ class StaticPetRepository  @Inject constructor(): PetRepository{
         return _pets
     }
 
-    override suspend fun getAdoptedPet(): Adoption? {
-        TODO("Not yet implemented")
+    override fun fetchPet(petId: Long): Flow<Pet> {
+        petList.firstOrNull {
+            it.id == petId
+        }.let {
+            if(it!=null){
+                CoroutineScope(Dispatchers.Main).launch {
+                    _selectedPet.emit(it)
+                }
+            }
+        }
+
+        return _selectedPet
     }
 
-    override fun adopt(adoption: Adoption) {
-        TODO("Not yet implemented")
+    override suspend fun getAdoptedPet(): Adoption? {
+        return adoption
+    }
+
+    override suspend fun adopt(adoption: Adoption) {
+        this.adoption = adoption
     }
 
 }

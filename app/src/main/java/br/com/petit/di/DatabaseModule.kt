@@ -1,12 +1,11 @@
 package br.com.petit.di
 
 import android.content.Context
-import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.room.Room
-import br.com.petit.MainActivity
-import br.com.petit.PetitApplication
+import br.com.petit.repository.LocalPetRepository
 import br.com.petit.repository.PetDao
 import br.com.petit.repository.PetDatabase
+import br.com.petit.repository.PetRepository
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -17,10 +16,6 @@ import javax.inject.Singleton
 @InstallIn(SingletonComponent::class)
 @Module
 object DatabaseModule {
-    @Provides
-    fun providePetDao(petDatabase: PetDatabase): PetDao {
-        return petDatabase.petDao()
-    }
 
     @Provides
     @Singleton
@@ -30,5 +25,16 @@ object DatabaseModule {
             PetDatabase::class.java,
             "Petit"
         ).build()
+    }
+
+    @Provides
+    fun providePetDao(petDatabase: PetDatabase): PetDao {
+        return petDatabase.petDao()
+    }
+
+    @Provides
+    @Singleton
+    fun providePetRepository(petDao: PetDao): PetRepository {
+        return LocalPetRepository(petDao)
     }
 }

@@ -1,45 +1,44 @@
 package br.com.petit.viewmodel
 
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.ViewModelProvider
-import br.com.petit.bloc.Navigator
-import br.com.petit.bloc.PopBackStack
+import androidx.lifecycle.viewModelScope
+import br.com.petit.model.Adoption
 import br.com.petit.model.Pet
-import br.com.petit.model.PetGender
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
+import br.com.petit.repository.PetRepository
+import kotlinx.coroutines.flow.*
+import kotlinx.coroutines.launch
+import java.util.logging.Level
+import java.util.logging.Logger
 
-class SuccessfulAdoptedScreenViewModel(private val petId: Long,
-                                       private val navigator: Navigator) : ViewModel() {
+class SuccessfulAdoptedScreenViewModel() : ViewModel() {
+/*
+    private val  _pet = MutableStateFlow<Pet?>(null)
+    val pet: StateFlow<Pet?> = _pet
 
-    private val petList = listOf(
-        Pet( 0,"Rudy", "https://images.dog.ceo/breeds/spaniel-welsh/n02102177_3639.jpg", PetGender.MALE, "Description"),
-        Pet( 1,"Holly", "https://images.dog.ceo/breeds/kuvasz/n02104029_4091.jpg", PetGender.FEMALE, "Description"),
-        Pet(2,"Maddie", "https://images.dog.ceo/breeds/cotondetulear/IMG_20160830_202631573.jpg", PetGender.FEMALE, "Description"),
-        Pet(3,"Roxy", "https://images.dog.ceo/breeds/pointer-german/n02100236_1553.jpg", PetGender.FEMALE, "Description"),
-        Pet(4,"Zoey", "https://images.dog.ceo/breeds/retriever-chesapeake/n02099849_264.jpg", PetGender.FEMALE, "Description"),
-        Pet(5,"Duke", "https://images.dog.ceo/breeds/cattledog-australian/IMG_1688.jpg", PetGender.MALE, "Description"),
-    )
+    private val job = petRepository.fetchPet(petId).onEach {
+        _pet.emit(it)
+    }.launchIn(viewModelScope)
 
-
-    private val petInstance = petList[petId.toInt()]
-    private val _pet = MutableStateFlow(petInstance)
-    val pet: StateFlow<Pet> = _pet
+    init{
+        Logger.getLogger("SuccessfulAdoptedScreenViewModel").log(
+            Level.INFO, "SuccessfulAdoptedScreenViewModel created")
+    }
 
     fun onBackPress(){
-        navigator.navigateTo(PopBackStack)
+        navigator.emitEvent(PopRoute)
     }
 
     fun onCancelButtonClick(){
-        //
-    }
-}
-
-class SuccessfulAdoptedScreenViewModelFactory(private val petId: Long, private val navigator: Navigator) : ViewModelProvider.Factory {
-    override fun <T : ViewModel?> create(modelClass: Class<T>): T {
-        if (modelClass.isAssignableFrom(SuccessfulAdoptedScreenViewModel::class.java)) {
-            return SuccessfulAdoptedScreenViewModel(petId,navigator) as T
+        navigator.emitEvent(PopRoute)
+        viewModelScope.launch {
+            petRepository.adopt(Adoption(0, null))
         }
-        throw IllegalArgumentException("Unknown ViewModel class")
     }
+
+    override fun onCleared() {
+        super.onCleared()
+        Logger.getLogger("SuccessfulAdoptedScreenViewModel").log(
+            Level.INFO, "SuccessfulAdoptedScreenViewModel cleared!!!")
+    }
+*/
 }
