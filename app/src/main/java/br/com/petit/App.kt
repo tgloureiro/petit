@@ -1,31 +1,57 @@
-import androidx.activity.ComponentActivity
-import androidx.compose.foundation.layout.padding
-import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.HiltViewModelFactory
-import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewmodel.compose.viewModel
-import br.com.petit.bloc.*
-import br.com.petit.navigator.*
-import br.com.petit.provider.BlocProvider
-import br.com.petit.repository.PetRepository
+import androidx.navigation.NavType
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
+import androidx.navigation.compose.navArgument
+import androidx.navigation.compose.rememberNavController
 import br.com.petit.ui.screen.MainScreen
-import br.com.petit.ui.theme.PetitTheme
+import br.com.petit.viewmodel.AdoptionScreenViewModel
+import br.com.petit.viewmodel.DetailsScreenViewModel
 import br.com.petit.viewmodel.MainScreenViewModel
-import br.com.petit.viewmodel.SuccessfulAdoptedScreenViewModel
-import tech.tiagoloureiro.navigator.NavigatorBloc
-import java.util.*
 
 
 @Composable
-fun App(navigator: NavigatorBloc) {
-    val routeState = navigator.state.collectAsState()
+fun App() {
+    val navController = rememberNavController()
+
+    NavHost(navController, startDestination = "main") {
+        composable("main") {
+            val vm : MainScreenViewModel = viewModel(
+                factory = HiltViewModelFactory(
+                    LocalContext.current, it
+                )
+            )
+            MainScreen(navController,vm)
+        }
+        composable("details/{petId}",
+            arguments = listOf(navArgument("petId") { type = NavType.LongType })) {
+            it.savedStateHandle.set("petId",it.arguments?.getLong("petId"))
+
+            val vm : DetailsScreenViewModel = viewModel(
+                factory = HiltViewModelFactory(
+                    LocalContext.current, it
+                )
+            )
+            DetailsScreen(navController,vm)
+        }
+        composable("adoption/{petId}",
+            arguments = listOf(navArgument("petId") { type = NavType.LongType })) {
+            it.savedStateHandle.set("petId",it.arguments?.getLong("petId"))
+
+            val vm : AdoptionScreenViewModel = viewModel(
+                factory = HiltViewModelFactory(
+                    LocalContext.current, it
+                )
+            )
+            AdoptionScreen(navController,vm)
+        }
+    }
+
+
+    /*val routeState = navigator.state.collectAsState()
     val route = routeState.value
 
     val activity = LocalContext.current as ComponentActivity
@@ -33,13 +59,20 @@ fun App(navigator: NavigatorBloc) {
     PetitTheme {
         when (route) {
             is MainRoute -> {
-
-                val mainVM = viewModel<MainScreenViewModel>()
+                val mainVM = ViewModelProvider(activity).get(MainScreenViewModel::class.java)
                 MainScreen(mainVM)
             }
 
             is DetailsRoute -> {
-                Text(
+                activity.viewModelStore.clear()
+                //ViewModelProviders make a bloc provider for the app
+                val detailsVM = viewModel<DetailsScreenViewModel>()
+                DetailsScreen(detailsVM)
+                /*DetailsScreenViewModel by viewModels {
+                    DetailsScreenViewModel.prprovideFactory(plantDetailViewModelFactory, args.plantId)
+                }*/
+
+                /*Text(
                     modifier = Modifier.padding(
                         start = 16.dp,
                         end = 16.dp,
@@ -49,7 +82,7 @@ fun App(navigator: NavigatorBloc) {
                     fontSize = 16.sp,
                     color = Color(0xFF777777),
                     text = "DetailsRoute"
-                )
+                )*/
                 /*val factory = provider.detail()
 
                 val liveBloc = navigator.getLiveBloc(
@@ -82,6 +115,6 @@ fun App(navigator: NavigatorBloc) {
                 SuccessfulAdoptionScreen(viewModel)*/
             }
         }
-    }
+    }*/
 
 }

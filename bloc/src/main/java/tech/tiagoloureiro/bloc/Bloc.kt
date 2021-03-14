@@ -1,23 +1,64 @@
 package tech.tiagoloureiro.bloc
 
+import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.filter
 
-abstract class Bloc<State, Event>(initialState: State) {
+data class Transition<State, Event>(
+    val event: Event,
+    val previousState: State,
+    val newState: State
+)
+
+abstract class Bloc<State, Event>(
+    initialState: State
+) {
     private val _state = MutableStateFlow(initialState)
-    val state = _state
+    private val _transition = MutableSharedFlow<Transition<State,Event>>()
 
-    fun add(event: Event) {
-        _state.tryEmit(
-            mapEventToState(event, _state.value)
-        )
-        //TODO: OnError?
+    val state = _state
+    val transition = _transition
+    val change = _transition.filter {
+        it.previousState != it.newState
     }
 
-    abstract fun mapEventToState(event: Event, state: State): State
+    fun add(event: Event) {
+        fun onEmitState(newState:State){
+            _state.tryEmit(newState)
+            _transition.tryEmit(Transition(event, state.value, newState))
+        }
+        mapEventToState(
+            event,
+            state.value,
+            ::onEmitState)
+    }
 
-    //TODO:
-    //onEvent
-    //onChange
-    //onTransition
-    //onError
+    abstract fun mapEventToState(event: Event, state: State, emit: (state: State) -> Unit)
 }
+
+
+
+
+/*
+    private val _events = MutableSharedFlow<Event>()
+
+    val eventSubscription =
+    _events
+        .onEach { event ->
+            val stateFlow = MutableSharedFlow<State>()
+            val stateSubscription = stateFlow
+                    .map {
+                        Transition(event, state.value, it)
+                    }
+                    .onEach { transition ->
+                        _state.emit(transition.newState)
+                        _transition.emit(transition)
+                    }
+                    .launchIn(scope)
+
+            mapEventToState(
+                event, state.value, { state -> scope.launch { stateFlow.emit(state) } }
+            )
+            stateSubscription.cancel()
+        }.launchIn(scope)
+*/

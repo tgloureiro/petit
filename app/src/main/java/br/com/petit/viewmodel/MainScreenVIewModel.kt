@@ -12,8 +12,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class MainScreenViewModel  @Inject constructor(
-    val petListBloc: PetListBloc,
-    val navigator: NavigatorBloc
+    val petListBloc: PetListBloc
 ) : ViewModel() {
 
     init{

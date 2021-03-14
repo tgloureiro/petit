@@ -1,20 +1,24 @@
 package br.com.petit
 
 import App
-import androidx.compose.runtime.Composable
-import br.com.petit.navigator.NavigationActivity
-import br.com.petit.provider.BlocProvider
-import br.com.petit.repository.StaticPetRepository
+import android.os.Bundle
+import androidx.activity.compose.setContent
+import androidx.appcompat.app.AppCompatActivity
+import br.com.petit.ui.theme.PetitTheme
 import dagger.hilt.android.AndroidEntryPoint
-import tech.tiagoloureiro.navigator.NavigatorBloc
 import javax.inject.Inject
+import tech.tiagoloureiro.navigator.NavigatorBloc
 
 @AndroidEntryPoint
-class MainActivity : NavigationActivity() {
+class MainActivity : AppCompatActivity() {
 
-    override val content: @Composable (navigator: NavigatorBloc) -> Unit = {
-            navigator ->
 
-            App(navigator)
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setContent {
+            PetitTheme {
+                App()
+            }
+        }
     }
 }

@@ -3,6 +3,7 @@ package br.com.petit.ui.screen
 import BackAppBar
 import MainAppBar
 import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
@@ -10,10 +11,7 @@ import androidx.compose.foundation.lazy.GridCells
 import androidx.compose.foundation.lazy.LazyVerticalGrid
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.Button
-import androidx.compose.material.CircularProgressIndicator
-import androidx.compose.material.Scaffold
-import androidx.compose.material.Text
+import androidx.compose.material.*
 import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
@@ -21,36 +19,38 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.NavController
+import androidx.navigation.compose.navigate
+import androidx.navigation.compose.rememberNavController
+import br.com.petit.R
 import br.com.petit.bloc.PetListLoaded
 import br.com.petit.bloc.PetListLoading
-import br.com.petit.navigator.DetailsRoute
 import br.com.petit.ui.theme.PetitTheme
 import br.com.petit.ui.util.ListDensity
+import br.com.petit.ui.util.stateSaver
 import br.com.petit.viewmodel.MainScreenViewModel
 import dev.chrisbanes.accompanist.coil.CoilImage
-import tech.tiagoloureiro.navigator.Navigate
 import java.util.*
-import java.util.logging.Level
-import java.util.logging.Logger
+
+
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
-fun MainScreen(viewModel: MainScreenViewModel) {
-    var densitySelector by rememberSaveable { mutableStateOf(ListDensity.TWO) }
+fun MainScreen(navController: NavController, viewModel: MainScreenViewModel) {
+    var densitySelector by rememberSaveable(saver = stateSaver()) { mutableStateOf(ListDensity.TWO) }
 
     val petListBloc = viewModel.petListBloc
-    val navigator = viewModel.navigator
 
     val state by petListBloc.state.collectAsState()
 
     when (val currentState = state) {
         is PetListLoaded -> {
-            Logger.getLogger("MainScr").log(Level.WARNING,"PetListLoaded")
             val pets = currentState.pets
             Scaffold(topBar = {
                 MainAppBar(
@@ -84,7 +84,7 @@ fun MainScreen(viewModel: MainScreenViewModel) {
                             Column(modifier = Modifier
                                 .padding(horizontal = 8.dp, vertical = 4.dp)
                                 .clickable {
-                                    navigator.add(Navigate(DetailsRoute(pet.id)))
+                                    navController.navigate("details/${pet.id}")
                                 }) {
 
                                 CoilImage(
@@ -154,19 +154,23 @@ fun MainScreen(viewModel: MainScreenViewModel) {
             }
         }
         PetListLoading -> {
-            Logger.getLogger("MainScr").log(Level.WARNING,"PetListLoading")
-
-            Scaffold(topBar = {
-                BackAppBar(title = "Loading pet details...") {
-                    //bloc.add(DetailsScreenPopEvent)
+            Scaffold(
+                topBar = {
+                    TopAppBar(
+                        title = {
+                            Image(
+                                painter = painterResource(R.drawable.ic_logo_app_bar),
+                                contentDescription = "menu",
+                            )
+                        },
+                        backgroundColor = MaterialTheme.colors.background)
+                }){
+                Box(Modifier.fillMaxWidth().fillMaxHeight()) {
+                    CircularProgressIndicator(Modifier.align(Alignment.Center))
                 }
-            }) {
-                CircularProgressIndicator()
             }
         }
     }
-
-
 }
 
 @Preview(showBackground = true)
@@ -176,6 +180,6 @@ fun MainScreenPreview() {
     val viewModel: MainScreenViewModel = viewModel()
 
     PetitTheme() {
-        MainScreen(viewModel)
+        MainScreen(rememberNavController(),viewModel)
     }
 }

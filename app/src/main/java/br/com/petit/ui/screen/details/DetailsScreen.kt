@@ -18,28 +18,37 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.lifecycle.viewmodel.compose.viewModel
-import br.com.petit.bloc.*
+import androidx.navigation.NavController
+import androidx.navigation.compose.navigate
+import br.com.petit.bloc.PetLoaded
+import br.com.petit.bloc.PetLoading
+import br.com.petit.bloc.PetNotFound
 import br.com.petit.model.PetGender
+import br.com.petit.ui.screen.details.DetailsLoadedPet
 import br.com.petit.ui.theme.PetitTheme
+import br.com.petit.viewmodel.DetailsScreenViewModel
 import dev.chrisbanes.accompanist.coil.CoilImage
-import tech.tiagoloureiro.bloc.Bloc
 import java.util.*
 
 
 @Composable
 fun DetailsScreen(
-    //bloc: Bloc<DetailsScreenState, DetailsScreenEvent>
+    navController: NavController,
+    viewModel: DetailsScreenViewModel
 ){
+    val state = viewModel.petBloc.state.collectAsState()
 
-    /*val state = bloc.state.collectAsState()
-
-    //Logger.getLogger("asd").log(
-      //  Level.WARNING, " ${serviceFactory.hashCode()} ")
-
-    when(state){
-        is Loaded -> {
-            val pet = (state as Loaded).pet
+    when(state.value){
+        is PetLoaded -> {
+            val pet = (state.value as PetLoaded).pet
+            DetailsLoadedPet(pet,
+                onBackPressedCallback = {
+                    navController.popBackStack()
+                },
+                onAdoptClicked = {
+                    navController.navigate("adoption/${pet.id}")
+                }
+            )
             Scaffold(topBar = {
                 BackAppBar(
                     title = when (pet.petGender) {
@@ -47,7 +56,7 @@ fun DetailsScreen(
                         PetGender.FEMALE -> "About her"
                     }
                 ) {
-                    bloc.add(DetailsScreenPopEvent)
+                    navController.popBackStack()
                 }
             }) {
                 Box(
@@ -145,7 +154,7 @@ fun DetailsScreen(
                     }
                     Button(
                         onClick = {
-                            bloc.add(DetailsScreenAdoptEvent)
+                            navController.navigate("adoption/${pet.id}")
                         },
                         modifier = Modifier
                             .padding(24.dp)
@@ -161,16 +170,29 @@ fun DetailsScreen(
                 }
             }
         }
-        is Loading -> {
+        is PetLoading -> {
             Scaffold(topBar = {
                 BackAppBar(title = "Loading pet details...") {
-                    bloc.add(DetailsScreenPopEvent)
+                    navController.popBackStack()
                 }
             }) {
-                CircularProgressIndicator()
+                Box(Modifier.fillMaxWidth().fillMaxHeight()) {
+                    CircularProgressIndicator(Modifier.align(Alignment.Center))
+                }
             }
         }
-    }*/
+        PetNotFound -> {
+            Scaffold(topBar = {
+                BackAppBar(title = "Error loading pet") {
+
+                }
+            }) {
+               Text(
+                   text = "Pet not found!"
+               )
+            }
+        }
+    }
 
 
 }

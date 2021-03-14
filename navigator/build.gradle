@@ -10,4 +10,5 @@ java {
 
 dependencies {
     implementation project(path: ':bloc')
+    implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-android:1.4.1'
 }
