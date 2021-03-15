@@ -5,7 +5,7 @@ buildscript {
         hilt_version = '2.33-beta'
         room_version = '2.3.0-beta02'
         kotlin_version = '1.4.31'
-
+        coroutinesVersion = '1.4.1'
     }
     repositories {
         google()

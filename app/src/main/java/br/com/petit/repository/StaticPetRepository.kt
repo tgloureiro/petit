@@ -3,12 +3,10 @@ package br.com.petit.repository
 import br.com.petit.model.Adoption
 import br.com.petit.model.Pet
 import br.com.petit.model.PetGender
-import kotlinx.coroutines.CoroutineDispatcher
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.*
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.selects.select
+import kotlinx.coroutines.*
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.MutableStateFlow
 import javax.inject.Inject
 
 class StaticPetRepository  @Inject constructor(): PetRepository{
@@ -25,15 +23,26 @@ class StaticPetRepository  @Inject constructor(): PetRepository{
     private val _pets = MutableStateFlow(petList)
     private val _selectedPet = MutableSharedFlow<Pet>(replay = 1)
 
+    private val scope = CoroutineScope(Dispatchers.Default)
+
+    init{
+        val job  = scope.launch {
+            while(isActive){
+                val random =(0..5).random()
+                println("emitting new list $random")
+                _pets.emit(petList.subList(0,random))
+                delay(10000)
+            }
+        }
+    }
+
     private var adoption: Adoption? = null
 
     override suspend fun insertPet(pet: Pet) {
         TODO("Not yet implemented")
     }
 
-    override fun fetchPets() : Flow<List<Pet>> {
-        return _pets
-    }
+    override fun fetchPets() : Flow<List<Pet>> = _pets
 
     override fun fetchPet(petId: Long): Flow<Pet> {
         petList.firstOrNull {

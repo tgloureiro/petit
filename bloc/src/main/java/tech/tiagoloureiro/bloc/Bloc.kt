@@ -1,64 +1,43 @@
 package tech.tiagoloureiro.bloc
 
-import kotlinx.coroutines.flow.MutableSharedFlow
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.filter
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.flow.*
+import kotlinx.coroutines.launch
 
-data class Transition<State, Event>(
-    val event: Event,
-    val previousState: State,
-    val newState: State
-)
-
-abstract class Bloc<State, Event>(
-    initialState: State
+abstract class Bloc<State, Event>(initialState: State,
+                                  private val scope: CoroutineScope
 ) {
     private val _state = MutableStateFlow(initialState)
-    private val _transition = MutableSharedFlow<Transition<State,Event>>()
+    private val _transition = MutableSharedFlow<Transition<State, Event>>()
+    private val _event = MutableSharedFlow<Event>()
 
-    val state = _state
-    val transition = _transition
-    val change = _transition.filter {
-        it.previousState != it.newState
-    }
+    val state : StateFlow<State> = _state
+    val transition  : SharedFlow<Transition<State,Event>>  = _transition
+    val event : SharedFlow<Event> = _event
 
-    fun add(event: Event) {
-        fun onEmitState(newState:State){
-            _state.tryEmit(newState)
-            _transition.tryEmit(Transition(event, state.value, newState))
-        }
-        mapEventToState(
-            event,
-            state.value,
-            ::onEmitState)
-    }
-
-    abstract fun mapEventToState(event: Event, state: State, emit: (state: State) -> Unit)
-}
-
-
-
-
-/*
-    private val _events = MutableSharedFlow<Event>()
+    val change = _transition.filter { it.previousState != it.newState }
 
     val eventSubscription =
-    _events
-        .onEach { event ->
-            val stateFlow = MutableSharedFlow<State>()
-            val stateSubscription = stateFlow
-                    .map {
-                        Transition(event, state.value, it)
-                    }
-                    .onEach { transition ->
-                        _state.emit(transition.newState)
-                        _transition.emit(transition)
-                    }
-                    .launchIn(scope)
+        _event
+            .onEach { event ->
+                suspend fun onEmitState(newState: State) {
+                    _state.emit(newState)
+                    _transition.emit(Transition(event, state.value, newState))
+                }
+                mapEventToState(
+                    event, state.value, ::onEmitState
+                )
+            }.launchIn(scope)
 
-            mapEventToState(
-                event, state.value, { state -> scope.launch { stateFlow.emit(state) } }
-            )
-            stateSubscription.cancel()
-        }.launchIn(scope)
-*/
+    fun add(event: Event) {
+        scope.launch {
+            _event.emit(event)
+        }
+    }
+
+    abstract suspend fun mapEventToState(
+        event: Event,
+        state: State,
+        emit: suspend (state: State) -> Unit
+    )
+}

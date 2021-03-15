@@ -5,7 +5,7 @@ import androidx.room.Entity
 import androidx.room.PrimaryKey
 
 /*
- * Disclaimer: I don't know if we should technically call it a gender
+ * Disclaimer: I don't know if we should technically call it a gender for dogs
  */
 enum class PetGender{
     MALE,

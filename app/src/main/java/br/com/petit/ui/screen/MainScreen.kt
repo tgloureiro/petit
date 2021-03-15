@@ -1,6 +1,5 @@
 package br.com.petit.ui.screen
 
-import BackAppBar
 import MainAppBar
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.Image
@@ -39,7 +38,6 @@ import dev.chrisbanes.accompanist.coil.CoilImage
 import java.util.*
 
 
-
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun MainScreen(navController: NavController, viewModel: MainScreenViewModel) {
@@ -48,6 +46,7 @@ fun MainScreen(navController: NavController, viewModel: MainScreenViewModel) {
     val petListBloc = viewModel.petListBloc
 
     val state by petListBloc.state.collectAsState()
+    println("mainscreen reacting to new list")
 
     when (val currentState = state) {
         is PetListLoaded -> {
