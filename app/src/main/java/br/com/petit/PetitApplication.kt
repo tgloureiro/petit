@@ -3,6 +3,4 @@ package br.com.petit
 import android.app.Application
 import dagger.hilt.android.HiltAndroidApp
 
-@HiltAndroidApp
-class PetitApplication : Application() {
-}
+@HiltAndroidApp class PetitApplication : Application()

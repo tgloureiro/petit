@@ -1,13 +1,19 @@
 package br.com.petit
 
-import androidx.test.ext.junit.runners.AndroidJUnit4
+import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.test.platform.app.InstrumentationRegistry
+import dagger.hilt.android.testing.HiltAndroidRule
+import dagger.hilt.android.testing.HiltAndroidTest
 import org.junit.Assert.*
+import org.junit.Rule
 import org.junit.Test
-import org.junit.runner.RunWith
 
-@RunWith(AndroidJUnit4::class)
-class MainActivityTest{
+@HiltAndroidTest
+class MainActivityTest {
+
+    @get:Rule var hiltRule = HiltAndroidRule(this)
+    @get:Rule var instantTaskExecutorRule = InstantTaskExecutorRule()
+
     @Test
     fun useAppContext() {
         // Context of the app under test.

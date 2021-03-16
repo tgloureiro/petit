@@ -56,13 +56,28 @@ constructor(
     }
 }
 
+/*
+ * PetStates
+ *
+ */
 
 sealed class PetState
+
 object PetLoading : PetState()
+
 data class PetLoaded(val pet: Pet) : PetState()
+
 object PetNotFound : PetState()
 
+/*
+ * PetEvents
+ *
+ */
+
 sealed class PetEvent
+
 private data class LoadedEvent(val pet: Pet) : PetEvent()
+
 private object LoadingEvent : PetEvent()
+
 private object PetNotFoundEvent : PetEvent()

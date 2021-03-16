@@ -1,4 +1,3 @@
-import android.widget.Toast
 import androidx.compose.animation.Crossfade
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
@@ -15,17 +14,14 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
-import androidx.navigation.NavController
-import androidx.navigation.compose.navigate
-import androidx.navigation.compose.popUpTo
 import br.com.petit.R
 import br.com.petit.ui.util.ListDensity
 
 @Composable
 fun MainAppBar(
     listDensity: ListDensity,
-    onListDensityClick : (listDensity:ListDensity) -> Unit,
-    onSearchClick : () -> Unit,
+    onListDensityClick: (listDensity: ListDensity) -> Unit,
+    onSearchClick: () -> Unit,
 ) {
     TopAppBar(
         title = {
@@ -36,7 +32,6 @@ fun MainAppBar(
         },
         actions = {
             Row(verticalAlignment = Alignment.CenterVertically) {
-
                 Crossfade(targetState = listDensity) {
                     when (it) {
                         ListDensity.ONE -> {
@@ -44,25 +39,18 @@ fun MainAppBar(
                                 painterResource(id = R.drawable.ic_selected_grid),
                                 "Grid",
                                 tint = Color(0xFFB2B2B2),
-                                modifier = Modifier
-                                    .padding(horizontal = 12.dp)
-                                    .clickable {
+                                modifier =
+                                    Modifier.padding(horizontal = 12.dp).clickable {
                                         onListDensityClick(ListDensity.TWO)
-                                    }
-                            )
-
-
+                                    })
                         }
                         ListDensity.TWO -> {
                             Image(
                                 painterResource(id = R.drawable.ic_selected_grid),
                                 "Grid",
-                                Modifier
-                                    .padding(horizontal = 12.dp)
-                                    .clickable {
-                                        onListDensityClick(ListDensity.TWO)
-                                    }
-                            )
+                                Modifier.padding(horizontal = 12.dp).clickable {
+                                    onListDensityClick(ListDensity.TWO)
+                                })
                         }
                     }
                 }
@@ -73,26 +61,20 @@ fun MainAppBar(
                             Image(
                                 painterResource(id = R.drawable.ic_selected_list),
                                 "List",
-                                Modifier
-                                    .clickable(onClick = {
-                                        onListDensityClick(ListDensity.ONE)
-                                    })
-                                    .padding(horizontal = 12.dp)
-                            )
+                                Modifier.clickable(
+                                        onClick = { onListDensityClick(ListDensity.ONE) })
+                                    .padding(horizontal = 12.dp))
                         }
                         ListDensity.TWO -> {
                             Icon(
                                 painterResource(id = R.drawable.ic_selected_list),
                                 "List",
                                 tint = Color(0xFFB2B2B2),
-                                modifier = Modifier
-                                    .clickable(onClick = {
-                                        onListDensityClick(ListDensity.ONE)
-                                    })
-                                    .padding(horizontal = 12.dp)
-                            )
+                                modifier =
+                                    Modifier.clickable(
+                                            onClick = { onListDensityClick(ListDensity.ONE) })
+                                        .padding(horizontal = 12.dp))
                         }
-
                     }
                 }
 
@@ -100,12 +82,9 @@ fun MainAppBar(
                     Icons.Filled.Search,
                     "Search",
                     tint = Color(0xFFB2B2B2),
-                    modifier = Modifier
-                        .clickable(onClick = onSearchClick)
-                        .padding(horizontal = 12.dp)
-                )
+                    modifier =
+                        Modifier.clickable(onClick = onSearchClick).padding(horizontal = 12.dp))
             }
         },
-        backgroundColor = MaterialTheme.colors.background
-    )
+        backgroundColor = MaterialTheme.colors.background)
 }

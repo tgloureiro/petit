@@ -10,21 +10,17 @@ import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 
-
 @ExperimentalCoroutinesApi
-internal class BlocTest{
+internal class BlocTest {
 
-    @ExperimentalCoroutinesApi
-    @get:Rule
-    var mainCoroutineRule = MainCoroutineRule()
+    @ExperimentalCoroutinesApi @get:Rule var mainCoroutineRule = MainCoroutineRule()
 
     private lateinit var simpleBloc: SimpleBloc
 
     @Before
-    fun setup(){
+    fun setup() {
         simpleBloc = SimpleBloc(CoroutineScope(Dispatchers.Main))
     }
-
 
     @Test
     fun simpleBloc_correctInitialState() = runBlockingTest {
@@ -67,7 +63,6 @@ internal class BlocTest{
         mainCoroutineRule.resumeDispatcher()
         assertThat(simpleBloc.state.value, IsEqual(FifthState))
 
-
         mainCoroutineRule.pauseDispatcher()
         simpleBloc.add(ChangeState(5))
         simpleBloc.add(ChangeState(4))
@@ -76,8 +71,6 @@ internal class BlocTest{
         simpleBloc.add(ChangeState(1))
         mainCoroutineRule.resumeDispatcher()
         assertThat(simpleBloc.state.value, IsEqual(FirstState))
-
-
     }
 
     @Test
@@ -92,5 +85,5 @@ internal class BlocTest{
         mainCoroutineRule.resumeDispatcher()
     }
 
-
+    // TODO: Expand tests
 }

@@ -27,10 +27,8 @@ import dev.chrisbanes.accompanist.coil.CoilImage
 import java.util.*
 
 @Composable
-fun DetailsLoadedPet(pet: Pet,
-                     onBackPressedCallback: () -> Unit,
-                     onAdoptClicked: () -> Unit
-) {
+// TODO: Rename composable to something better
+fun DetailsLoadedPet(pet: Pet, onBackPressedCallback: () -> Unit, onAdoptClicked: () -> Unit) {
     Scaffold(
         topBar = {
             BackAppBar(
@@ -124,7 +122,8 @@ fun DetailsLoadedPet(pet: Pet,
                 Text(
                     text = "Adopt ${pet.name}",
                     modifier = Modifier.padding(vertical = 8.dp),
-                    fontSize = 20.sp)
+                    fontSize = 20.sp,
+                )
             }
         }
     }

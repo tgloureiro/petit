@@ -10,13 +10,11 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 
 @HiltViewModel
-class AdoptionScreenViewModel @Inject constructor(
+class AdoptionScreenViewModel
+@Inject
+constructor(
     petListBloc: PetListBloc,
     savedStateHandle: SavedStateHandle,
 ) : ViewModel(), LifecycleObserver {
-    val petBloc : PetBloc = PetBloc(
-        savedStateHandle["petId"],
-        petListBloc,
-        viewModelScope
-    )
+    val petBloc: PetBloc = PetBloc(savedStateHandle["petId"], petListBloc, viewModelScope)
 }

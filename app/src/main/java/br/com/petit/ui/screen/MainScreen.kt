@@ -37,11 +37,12 @@ import br.com.petit.viewmodel.MainScreenViewModel
 import dev.chrisbanes.accompanist.coil.CoilImage
 import java.util.*
 
-
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun MainScreen(navController: NavController, viewModel: MainScreenViewModel) {
-    var densitySelector by rememberSaveable(saver = stateSaver()) { mutableStateOf(ListDensity.TWO) }
+    var densitySelector by rememberSaveable(saver = stateSaver()) {
+        mutableStateOf(ListDensity.TWO)
+    }
 
     val petListBloc = viewModel.petListBloc
 
@@ -51,103 +52,73 @@ fun MainScreen(navController: NavController, viewModel: MainScreenViewModel) {
     when (val currentState = state) {
         is PetListLoaded -> {
             val pets = currentState.pets
-            Scaffold(topBar = {
-                MainAppBar(
-                    listDensity = densitySelector,
-                    onListDensityClick = { listDensity ->
-                        densitySelector = listDensity
-                    },
-                    onSearchClick = {
-
-                    }
-                )
-            }) {
-                //fixed: GridCells.Fixed(1)
-                //dynamic:
+            Scaffold(
+                topBar = {
+                    MainAppBar(
+                        listDensity = densitySelector,
+                        onListDensityClick = { listDensity -> densitySelector = listDensity },
+                        onSearchClick = {})
+                }) {
+                // fixed: GridCells.Fixed(1)
+                // dynamic:
                 Box(contentAlignment = Alignment.BottomCenter) {
                     LazyVerticalGrid(
-                        cells = GridCells.Fixed(
-                            when (densitySelector) {
-                                ListDensity.ONE -> 1
-                                ListDensity.TWO -> 2
-                            }
-                        ),
-                        contentPadding = PaddingValues(
-                            horizontal = 8.dp,
-                            vertical = 24.dp
-                        ),
-
-                        ) {
-                        //LazyColumn{
+                        cells =
+                            GridCells.Fixed(
+                                when (densitySelector) {
+                                    ListDensity.ONE -> 1
+                                    ListDensity.TWO -> 2
+                                }),
+                        contentPadding = PaddingValues(horizontal = 8.dp, vertical = 24.dp),
+                    ) {
+                        // LazyColumn{
                         itemsIndexed(items = pets) { index, pet ->
-                            Column(modifier = Modifier
-                                .padding(horizontal = 8.dp, vertical = 4.dp)
-                                .clickable {
-                                    navController.navigate("details/${pet.id}")
-                                }) {
-
+                            Column(
+                                modifier =
+                                    Modifier.padding(horizontal = 8.dp, vertical = 4.dp).clickable {
+                                        navController.navigate("details/${pet.id}")
+                                    }) {
                                 CoilImage(
                                     data = pet.pictureUrl,
                                     "Grid",
-                                    modifier = Modifier
-                                        .aspectRatio(1.305f)
-                                        .fillMaxWidth()
-                                        .clip(
-                                            shape = RoundedCornerShape(16.dp),
-                                        ),
-                                    contentScale = ContentScale.Crop
-                                )
+                                    modifier =
+                                        Modifier.aspectRatio(1.305f)
+                                            .fillMaxWidth()
+                                            .clip(
+                                                shape = RoundedCornerShape(16.dp),
+                                            ),
+                                    contentScale = ContentScale.Crop)
 
                                 Text(
-                                    modifier = Modifier.padding(
-                                        start = 16.dp,
-                                        end = 16.dp,
-                                        top = 4.dp,
-                                        bottom = 0.dp
-                                    ),
+                                    modifier =
+                                        Modifier.padding(
+                                            start = 16.dp, end = 16.dp, top = 4.dp, bottom = 0.dp),
                                     text = pet.name,
                                     fontSize = 18.sp,
-                                    fontWeight = FontWeight.Bold
-                                )
+                                    fontWeight = FontWeight.Bold)
                                 Text(
-                                    modifier = Modifier.padding(
-                                        start = 16.dp,
-                                        end = 16.dp,
-                                        top = 0.dp,
-                                        bottom = 16.dp
-                                    ),
+                                    modifier =
+                                        Modifier.padding(
+                                            start = 16.dp, end = 16.dp, top = 0.dp, bottom = 16.dp),
                                     fontSize = 14.sp,
                                     color = Color(0xFF777777),
-                                    text = pet.petGender.name.capitalize(Locale.getDefault())
-                                )
-
+                                    text = pet.petGender.name.capitalize(Locale.getDefault()))
                             }
                         }
                     }
                     Box(
                         contentAlignment = Alignment.Center,
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .background(
-                                color = Color(0xDDFFFFFF)
-                            )
-                    ) {
+                        modifier = Modifier.fillMaxWidth().background(color = Color(0xDDFFFFFF))) {
                         Button(
                             onClick = {
                                 //   viewModel.deleteFirst()
                             },
-                            modifier = Modifier
-                                .padding(24.dp)
-                                .fillMaxWidth()
-                        ) {
+                            modifier = Modifier.padding(24.dp).fillMaxWidth()) {
                             Text(
                                 text = "I'm feeling lucky",
                                 modifier = Modifier.padding(vertical = 8.dp),
-                                fontSize = 20.sp
-
-                            )
+                                fontSize = 20.sp)
                         }
-
                     }
                 }
             }
@@ -163,7 +134,7 @@ fun MainScreen(navController: NavController, viewModel: MainScreenViewModel) {
                             )
                         },
                         backgroundColor = MaterialTheme.colors.background)
-                }){
+                }) {
                 Box(Modifier.fillMaxWidth().fillMaxHeight()) {
                     CircularProgressIndicator(Modifier.align(Alignment.Center))
                 }
@@ -178,7 +149,5 @@ fun MainScreen(navController: NavController, viewModel: MainScreenViewModel) {
 fun MainScreenPreview() {
     val viewModel: MainScreenViewModel = viewModel()
 
-    PetitTheme() {
-        MainScreen(rememberNavController(),viewModel)
-    }
+    PetitTheme() { MainScreen(rememberNavController(), viewModel) }
 }

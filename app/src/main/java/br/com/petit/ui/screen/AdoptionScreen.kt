@@ -33,7 +33,7 @@ fun AdoptionScreen(navController: NavController, viewModel: AdoptionScreenViewMo
     val state = viewModel.petBloc.state.collectAsState()
     when (state.value) {
         is PetLoaded -> {
-            val pet = (state.value as PetLoaded ).pet
+            val pet = (state.value as PetLoaded).pet
             Scaffold(
                 topBar = {
                     TopAppBar(
@@ -49,7 +49,8 @@ fun AdoptionScreen(navController: NavController, viewModel: AdoptionScreenViewMo
                     // title
                     Text(
                         modifier =
-                        Modifier.padding(start = 16.dp, end = 16.dp, top = 16.dp, bottom = 16.dp),
+                            Modifier.padding(
+                                start = 16.dp, end = 16.dp, top = 16.dp, bottom = 16.dp),
                         text = "Congratulations! You adopted ${pet!!.name}",
                         fontSize = 36.sp,
                         fontWeight = FontWeight.Bold,
@@ -59,35 +60,36 @@ fun AdoptionScreen(navController: NavController, viewModel: AdoptionScreenViewMo
                         data = pet!!.pictureUrl,
                         "Grid",
                         modifier =
-                        Modifier.padding(horizontal = 16.dp, vertical = 4.dp)
-                            .aspectRatio(1.305f)
-                            .widthIn(max = 128.dp)
-                            .shadow(8.dp, shape = RoundedCornerShape(16.dp), clip = true),
+                            Modifier.padding(horizontal = 16.dp, vertical = 4.dp)
+                                .aspectRatio(1.305f)
+                                .widthIn(max = 128.dp)
+                                .shadow(8.dp, shape = RoundedCornerShape(16.dp), clip = true),
                         contentScale = ContentScale.Crop)
 
                     Image(
                         painterResource(R.drawable.map),
                         "Map",
                         modifier =
-                        Modifier.padding(horizontal = 46.dp, vertical = 24.dp)
-                            .aspectRatio(1.69f)
-                            .fillMaxWidth()
-                            .shadow(8.dp, shape = RoundedCornerShape(16.dp), clip = true),
+                            Modifier.padding(horizontal = 46.dp, vertical = 24.dp)
+                                .aspectRatio(1.69f)
+                                .fillMaxWidth()
+                                .shadow(8.dp, shape = RoundedCornerShape(16.dp), clip = true),
                         contentScale = ContentScale.Crop)
 
                     Text(
                         text =
-                        "Your new buddy is being comfortably delivered to your house right now. ",
+                            "Your new buddy is being comfortably delivered " +
+                                "to your house right now.",
                         modifier = Modifier.padding(horizontal = 36.dp),
                         textAlign = TextAlign.Center)
                     // footer button
                     Button(
                         onClick = { navController.popBackStack() },
                         modifier =
-                        Modifier.padding(horizontal = 24.dp, vertical = 36.dp).fillMaxWidth(),
+                            Modifier.padding(horizontal = 24.dp, vertical = 36.dp).fillMaxWidth(),
                         colors =
-                        ButtonDefaults.buttonColors(
-                            backgroundColor = MaterialTheme.colors.background)) {
+                            ButtonDefaults.buttonColors(
+                                backgroundColor = MaterialTheme.colors.background)) {
                         Text(
                             text = "CANCEL",
                             modifier = Modifier.padding(vertical = 8.dp, horizontal = 46.dp),
@@ -121,6 +123,5 @@ fun AdoptionScreen(navController: NavController, viewModel: AdoptionScreenViewMo
 @ExperimentalFoundationApi
 fun SuccessfulAdoptionScreenPreview() {
     val viewModel: AdoptionScreenViewModel = viewModel()
-
     PetitTheme() { AdoptionScreen(rememberNavController(), viewModel) }
 }

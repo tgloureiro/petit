@@ -16,29 +16,20 @@ import androidx.compose.ui.unit.sp
 import br.com.petit.R
 
 @Composable
-fun BackAppBar(
-    title: String,
-    onBackPressed: () -> Unit
-) {
+fun BackAppBar(title: String, onBackPressed: () -> Unit) {
     Row(modifier = Modifier.fillMaxWidth()) {
         CompositionLocalProvider(LocalContentAlpha provides ContentAlpha.medium) {
-            IconButton(
-                onClick = onBackPressed
-            ) {
+            IconButton(onClick = onBackPressed) {
                 Icon(
                     Icons.Filled.ArrowBack,
-                    contentDescription = stringResource(id = R.string.app_name)
-                )
+                    contentDescription = stringResource(id = R.string.app_name))
             }
         }
         Text(
-            modifier = Modifier
-                .align(Alignment.CenterVertically)
-                .padding(horizontal = 24.dp),
+            modifier = Modifier.align(Alignment.CenterVertically).padding(horizontal = 24.dp),
             text = title,
             fontSize = 20.sp,
             fontWeight = FontWeight.Bold,
-            color = Color(0xFF333333)
-        )
+            color = Color(0xFF333333))
     }
 }

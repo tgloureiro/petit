@@ -7,7 +7,7 @@ import androidx.room.PrimaryKey
 /*
  * Disclaimer: I don't know if we should technically call it a gender for dogs
  */
-enum class PetGender{
+enum class PetGender {
     MALE,
     FEMALE,
 }
@@ -15,8 +15,8 @@ enum class PetGender{
 @Entity(tableName = "pet")
 data class Pet(
     @PrimaryKey val id: Long,
-    @ColumnInfo val name:String,
+    @ColumnInfo val name: String,
     @ColumnInfo(name = "picture_url") val pictureUrl: String,
-    @ColumnInfo(name = "pet_gender")  val petGender: PetGender,
+    @ColumnInfo(name = "pet_gender") val petGender: PetGender,
     @ColumnInfo(name = "description") val description: String?,
 )

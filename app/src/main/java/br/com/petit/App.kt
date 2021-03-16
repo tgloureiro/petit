@@ -12,42 +12,33 @@ import br.com.petit.viewmodel.AdoptionScreenViewModel
 import br.com.petit.viewmodel.DetailsScreenViewModel
 import br.com.petit.viewmodel.MainScreenViewModel
 
-
 @Composable
 fun App() {
     val navController = rememberNavController()
 
     NavHost(navController, startDestination = "main") {
         composable("main") {
-            val vm : MainScreenViewModel = viewModel(
-                factory = HiltViewModelFactory(
-                    LocalContext.current, it
-                )
-            )
-            MainScreen(navController,vm)
+            val vm: MainScreenViewModel =
+                viewModel(factory = HiltViewModelFactory(LocalContext.current, it))
+            MainScreen(navController, vm)
         }
-        composable("details/{petId}",
+        composable(
+            "details/{petId}",
             arguments = listOf(navArgument("petId") { type = NavType.LongType })) {
-            it.savedStateHandle.set("petId",it.arguments?.getLong("petId"))
+            it.savedStateHandle.set("petId", it.arguments?.getLong("petId"))
 
-            val vm : DetailsScreenViewModel = viewModel(
-                factory = HiltViewModelFactory(
-                    LocalContext.current, it
-                )
-            )
-            DetailsScreen(navController,vm)
+            val vm: DetailsScreenViewModel =
+                viewModel(factory = HiltViewModelFactory(LocalContext.current, it))
+            DetailsScreen(navController, vm.petBloc)
         }
-        composable("adoption/{petId}",
+        composable(
+            "adoption/{petId}",
             arguments = listOf(navArgument("petId") { type = NavType.LongType })) {
-            it.savedStateHandle.set("petId",it.arguments?.getLong("petId"))
+            it.savedStateHandle.set("petId", it.arguments?.getLong("petId"))
 
-            val vm : AdoptionScreenViewModel = viewModel(
-                factory = HiltViewModelFactory(
-                    LocalContext.current, it
-                )
-            )
-            AdoptionScreen(navController,vm)
+            val vm: AdoptionScreenViewModel =
+                viewModel(factory = HiltViewModelFactory(LocalContext.current, it))
+            AdoptionScreen(navController, vm)
         }
     }
-
 }

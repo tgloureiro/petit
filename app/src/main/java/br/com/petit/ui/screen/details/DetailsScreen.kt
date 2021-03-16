@@ -20,96 +20,71 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import androidx.navigation.compose.navigate
+import br.com.petit.bloc.PetBloc
 import br.com.petit.bloc.PetLoaded
 import br.com.petit.bloc.PetLoading
 import br.com.petit.bloc.PetNotFound
 import br.com.petit.model.PetGender
 import br.com.petit.ui.screen.details.DetailsLoadedPet
 import br.com.petit.ui.theme.PetitTheme
-import br.com.petit.viewmodel.DetailsScreenViewModel
 import dev.chrisbanes.accompanist.coil.CoilImage
 import java.util.*
 
-
 @Composable
-fun DetailsScreen(
-    navController: NavController,
-    viewModel: DetailsScreenViewModel
-){
-    val state = viewModel.petBloc.state.collectAsState()
+fun DetailsScreen(navController: NavController, petBloc: PetBloc) {
+    val state = petBloc.state.collectAsState()
 
-    when(state.value){
+    when (state.value) {
         is PetLoaded -> {
             val pet = (state.value as PetLoaded).pet
-            DetailsLoadedPet(pet,
-                onBackPressedCallback = {
-                    navController.popBackStack()
-                },
-                onAdoptClicked = {
-                    navController.navigate("adoption/${pet.id}")
-                }
-            )
-            Scaffold(topBar = {
-                BackAppBar(
-                    title = when (pet.petGender) {
-                        PetGender.MALE -> "About him"
-                        PetGender.FEMALE -> "About her"
-                    }
-                ) {
-                    navController.popBackStack()
-                }
-            }) {
+            DetailsLoadedPet(
+                pet,
+                onBackPressedCallback = { navController.popBackStack() },
+                onAdoptClicked = { navController.navigate("adoption/${pet.id}") })
+            Scaffold(
+                topBar = {
+                    BackAppBar(
+                        title =
+                            when (pet.petGender) {
+                                PetGender.MALE -> "About him"
+                                PetGender.FEMALE -> "About her"
+                            }) { navController.popBackStack() }
+                }) {
                 Box(
                     contentAlignment = Alignment.BottomCenter,
-                    modifier = Modifier.fillMaxHeight()
-                ) {
+                    modifier = Modifier.fillMaxHeight()) {
                     Column(
-                        modifier =
-                        Modifier
-                            .fillMaxHeight()
-                            .verticalScroll(rememberScrollState())
-                    ) {
+                        modifier = Modifier.fillMaxHeight().verticalScroll(rememberScrollState())) {
                         CoilImage(
                             data = pet.pictureUrl,
                             "Pet photo",
-                            modifier = Modifier
-                                .padding(horizontal = 16.dp, vertical = 4.dp)
-                                .aspectRatio(1.305f)
-                                .clip(RoundedCornerShape(16.dp)),
-                            contentScale = ContentScale.Crop
-                        )
+                            modifier =
+                                Modifier.padding(horizontal = 16.dp, vertical = 4.dp)
+                                    .aspectRatio(1.305f)
+                                    .clip(RoundedCornerShape(16.dp)),
+                            contentScale = ContentScale.Crop)
                         Text(
-                            modifier = Modifier.padding(
-                                start = 16.dp,
-                                end = 16.dp,
-                                top = 0.dp,
-                                bottom = 0.dp
-                            ),
+                            modifier =
+                                Modifier.padding(
+                                    start = 16.dp, end = 16.dp, top = 0.dp, bottom = 0.dp),
                             text = pet.name,
                             fontSize = 48.sp,
-                            fontWeight = FontWeight.Bold
-                        )
+                            fontWeight = FontWeight.Bold)
                         Text(
-                            modifier = Modifier.padding(
-                                start = 16.dp,
-                                end = 16.dp,
-                                top = 0.dp,
-                                bottom = 16.dp
-                            ),
+                            modifier =
+                                Modifier.padding(
+                                    start = 16.dp, end = 16.dp, top = 0.dp, bottom = 16.dp),
                             fontSize = 16.sp,
                             color = Color(0xFF777777),
-                            text = pet.petGender.name.capitalize(Locale.getDefault())
-                        )
+                            text = pet.petGender.name.capitalize(Locale.getDefault()))
                         Text(
-                            modifier = Modifier.padding(
-                                start = 16.dp,
-                                end = 16.dp,
-                                top = 0.dp,
-                                bottom = 16.dp
-                            ),
+                            modifier =
+                                Modifier.padding(
+                                    start = 16.dp, end = 16.dp, top = 0.dp, bottom = 16.dp),
                             fontSize = 16.sp,
                             color = Color(0xFF777777),
-                            text = "${pet.name} loves a run, so if you’re looking for a jogging companion or someone to take long walks with, then ${pet.name} is your ${
+                            text =
+                                "${pet.name} loves a run, so if you’re looking for a jogging companion or someone to take long walks with, then ${pet.name} is your ${
                                 when (pet.petGender) {
                                     PetGender.MALE -> "boy"
                                     PetGender.FEMALE -> "lady"
@@ -149,62 +124,42 @@ fun DetailsScreen(
                                     PetGender.MALE -> "him"
                                     PetGender.FEMALE -> "her"
                                 }
-                            } best. Be a hero for ${pet.name}!"
-                        )
+                            } best. Be a hero for ${pet.name}!")
                     }
                     Button(
-                        onClick = {
-                            navController.navigate("adoption/${pet.id}")
-                        },
-                        modifier = Modifier
-                            .padding(24.dp)
-                            .fillMaxWidth()
-                    ) {
+                        onClick = { navController.navigate("adoption/${pet.id}") },
+                        modifier = Modifier.padding(24.dp).fillMaxWidth()) {
                         Text(
                             text = "Adopt ${pet.name}",
                             modifier = Modifier.padding(vertical = 8.dp),
-                            fontSize = 20.sp
-
-                        )
+                            fontSize = 20.sp)
                     }
                 }
             }
         }
         is PetLoading -> {
-            Scaffold(topBar = {
-                BackAppBar(title = "Loading pet details...") {
-                    navController.popBackStack()
-                }
-            }) {
+            Scaffold(
+                topBar = {
+                    BackAppBar(title = "Loading pet details...") { navController.popBackStack() }
+                }) {
                 Box(Modifier.fillMaxWidth().fillMaxHeight()) {
                     CircularProgressIndicator(Modifier.align(Alignment.Center))
                 }
             }
         }
         PetNotFound -> {
-            Scaffold(topBar = {
-                BackAppBar(title = "Error loading pet") {
-
-                }
-            }) {
-               Text(
-                   text = "Pet not found!"
-               )
+            Scaffold(topBar = { BackAppBar(title = "Error loading pet") {} }) {
+                Text(text = "Pet not found!")
             }
         }
     }
-
-
 }
-
 
 @Preview(showBackground = true)
 @Composable
 @ExperimentalFoundationApi
 fun DetailsScreenPreview() {
-    //val viewModel: DetailsScreenBloc = viewModel()
-
     PetitTheme() {
-        //DetailsScreen(viewModel)
+        // DetailsScreen(viewModel)
     }
 }
