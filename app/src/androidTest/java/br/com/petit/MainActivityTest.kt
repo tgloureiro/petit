@@ -10,7 +10,6 @@ import org.junit.Test
 
 @HiltAndroidTest
 class MainActivityTest {
-
     @get:Rule var hiltRule = HiltAndroidRule(this)
     @get:Rule var instantTaskExecutorRule = InstantTaskExecutorRule()
 
