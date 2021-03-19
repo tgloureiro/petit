@@ -3,7 +3,7 @@ package br.com.petit.feature.pet.di
 import br.com.petit.core.repository.AppDatabase
 import br.com.petit.feature.pet.repository.PetDao
 import br.com.petit.feature.pet.repository.PetRepository
-import br.com.petit.feature.pet.repository.RoomPetRepository
+import br.com.petit.feature.pet.repository.SimplePetRepository
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -19,9 +19,15 @@ object PetRepositoryModule {
         return appDatabase.petDao()
     }
 
-    @Provides
+    /*@Provides
     @Singleton
     fun providePetRepository(petDao: PetDao): PetRepository {
         return RoomPetRepository(petDao)
+    }*/
+
+    @Provides
+    @Singleton
+    fun providePetRepository(): PetRepository {
+        return SimplePetRepository()
     }
 }

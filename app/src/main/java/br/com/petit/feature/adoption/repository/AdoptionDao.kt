@@ -8,7 +8,9 @@ import kotlinx.coroutines.flow.Flow
 interface AdoptionDao {
 
     // Hack to make a Single Row Table
-    @Transaction @Query("SELECT * FROM adoption WHERE id = 0") fun getAdoptedPet(): Flow<Adoption?>
+    @Transaction
+    @Query("SELECT * FROM adoption WHERE adoption_id = 0")
+    fun getAdoptedPet(): Flow<Adoption?>
 
     // Hack to make a Single Row Table
     @Insert(onConflict = OnConflictStrategy.REPLACE) suspend fun adopt(adoption: Adoption)

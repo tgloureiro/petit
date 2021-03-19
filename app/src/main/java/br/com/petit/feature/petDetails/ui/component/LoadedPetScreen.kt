@@ -2,6 +2,7 @@ package br.com.petit.feature.petDetails.ui.component
 
 import BackAppBar
 import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -11,41 +12,89 @@ import androidx.compose.material.CircularProgressIndicator
 import androidx.compose.material.Scaffold
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.State
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.semantics.testTag
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import br.com.petit.R
 import br.com.petit.core.ui.theme.PetitTheme
+import br.com.petit.feature.adoption.bloc.AdoptionState
+import br.com.petit.feature.adoption.bloc.NoAdoption
+import br.com.petit.feature.adoption.bloc.ValidAdoption
 import br.com.petit.feature.pet.model.Pet
 import br.com.petit.feature.pet.model.PetGender
 import dev.chrisbanes.accompanist.coil.CoilImage
 import java.util.*
 
 @Composable
-// TODO: Rename composable to something better
-fun DetailsLoadedPet(pet: Pet, onBackPressedCallback: () -> Unit, onAdoptClicked: () -> Unit) {
+fun LoadedPetScreen(
+    pet: Pet,
+    adoptionState: State<AdoptionState>,
+    onBackPressedCallback: () -> Unit,
+    onAdoptClicked: () -> Unit,
+    onCancelAdoptionClicked: () -> Unit
+) {
+    val loadedPetScreenTestTag = stringResource(id = R.string.pet_loaded_screen_test_tag)
+
     Scaffold(
         topBar = {
             BackAppBar(
                 title =
                     when (pet.petGender) {
-                        PetGender.MALE -> "About him"
-                        PetGender.FEMALE -> "About her"
-                    }) {
-                onBackPressedCallback()
-                // navController.popBackStack()
+                        PetGender.MALE -> stringResource(R.string.about_male_pet)
+                        PetGender.FEMALE -> stringResource(R.string.about_female_pet)
+                    }) { onBackPressedCallback() }
+        },
+        bottomBar = {
+            if (adoptionState.value is ValidAdoption &&
+                ((adoptionState.value as ValidAdoption).adoption.pet?.id == pet.id)) {
+                Box(
+                    contentAlignment = Alignment.Center,
+                    modifier = Modifier.fillMaxWidth().background(color = Color(0xDDFFFFFF))) {
+                    Button(
+                        onClick = { onCancelAdoptionClicked() },
+                        modifier = Modifier.padding(24.dp).fillMaxWidth()) {
+                        Text(
+                            text = stringResource(id = R.string.cancel_adoption),
+                            modifier = Modifier.padding(vertical = 8.dp),
+                            fontSize = 20.sp)
+                    }
+                }
+            } else {
+                Box(
+                    contentAlignment = Alignment.Center,
+                    modifier = Modifier.fillMaxWidth().background(color = Color(0xDDFFFFFF))) {
+                    Button(
+                        onClick = { onAdoptClicked() },
+                        modifier = Modifier.padding(24.dp).fillMaxWidth()) {
+                        Text(
+                            // Interpolate string resource with pet's name
+                            text =
+                                stringResource(
+                                    R.string.adopt_name, pet.name.capitalize(Locale.getDefault())),
+                            modifier = Modifier.padding(vertical = 8.dp),
+                            fontSize = 20.sp)
+                    }
+                }
             }
         },
-        modifier = Modifier.semantics { testTag = "detailsLoadedPet" }) {
-        Box(contentAlignment = Alignment.BottomCenter, modifier = Modifier.fillMaxHeight()) {
-            Column(modifier = Modifier.fillMaxHeight().verticalScroll(rememberScrollState())) {
+        modifier = Modifier.semantics { testTag = loadedPetScreenTestTag }) {
+        Column(
+            modifier =
+                Modifier.padding(bottom = 128.dp, start = 24.dp, end = 24.dp)
+                    .fillMaxHeight()
+                    .verticalScroll(rememberScrollState())) {
+            Row(modifier = Modifier.height(196.dp).padding(vertical = 12.dp)) {
                 CoilImage(
                     data = pet.pictureUrl,
                     "Pet photo",
@@ -60,25 +109,31 @@ fun DetailsLoadedPet(pet: Pet, onBackPressedCallback: () -> Unit, onAdoptClicked
                         }
                     },
                 )
-                Text(
-                    modifier =
-                        Modifier.padding(start = 16.dp, end = 16.dp, top = 0.dp, bottom = 0.dp),
-                    text = pet.name,
-                    fontSize = 48.sp,
-                    fontWeight = FontWeight.Bold)
-                Text(
-                    modifier =
-                        Modifier.padding(start = 16.dp, end = 16.dp, top = 0.dp, bottom = 16.dp),
-                    fontSize = 16.sp,
-                    color = Color(0xFF777777),
-                    text = pet.petGender.name.capitalize(Locale.getDefault()))
-                Text(
-                    modifier =
-                        Modifier.padding(start = 16.dp, end = 16.dp, top = 0.dp, bottom = 16.dp),
-                    fontSize = 16.sp,
-                    color = Color(0xFF777777),
-                    text =
-                        "${pet.name} loves a run, so if you’re looking for a jogging companion or someone to take long walks with, then ${pet.name} is your ${
+                Column() {
+                    Text(
+                        modifier =
+                            Modifier.padding(start = 16.dp, end = 16.dp, top = 0.dp, bottom = 0.dp),
+                        text = pet.name,
+                        fontSize = 36.sp,
+                        maxLines = 1,
+                        fontWeight = FontWeight.Bold)
+                    Text(
+                        modifier =
+                            Modifier.padding(
+                                start = 16.dp, end = 16.dp, top = 0.dp, bottom = 16.dp),
+                        fontSize = 16.sp,
+                        maxLines = 1,
+                        color = Color(0xFF777777),
+                        text = pet.petGender.name.capitalize(Locale.getDefault()))
+                }
+            }
+
+            Text(
+                modifier = Modifier.padding(start = 16.dp, end = 16.dp, top = 0.dp, bottom = 16.dp),
+                fontSize = 16.sp,
+                color = Color(0xFF777777),
+                text =
+                    "${pet.name} loves a run, so if you’re looking for a jogging companion or someone to take long walks with, then ${pet.name} is your ${
                         when (pet.petGender) {
                             PetGender.MALE -> "boy"
                             PetGender.FEMALE -> "lady"
@@ -119,15 +174,6 @@ fun DetailsLoadedPet(pet: Pet, onBackPressedCallback: () -> Unit, onAdoptClicked
                             PetGender.FEMALE -> "her"
                         }
                     } best. Be a hero for ${pet.name}!")
-            }
-            Button(
-                onClick = { onAdoptClicked() }, modifier = Modifier.padding(24.dp).fillMaxWidth()) {
-                Text(
-                    text = "Adopt ${pet.name}",
-                    modifier = Modifier.padding(vertical = 8.dp),
-                    fontSize = 20.sp,
-                )
-            }
         }
     }
 }
@@ -144,5 +190,6 @@ fun DetailsLoadedPetPreview() {
             PetGender.MALE,
             "Description")
 
-    PetitTheme() { DetailsLoadedPet(pet, {}, {}) }
+    val adoptionState = mutableStateOf<AdoptionState>(NoAdoption)
+    PetitTheme() { LoadedPetScreen(pet, adoptionState, {}, {}, {}) }
 }

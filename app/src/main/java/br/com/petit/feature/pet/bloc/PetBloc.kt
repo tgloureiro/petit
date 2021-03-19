@@ -1,83 +1,60 @@
 package br.com.petit.feature.pet.bloc
 
 import br.com.petit.feature.pet.model.Pet
+import br.com.petit.feature.pet.repository.PetRepository
+import javax.inject.Inject
+import javax.inject.Singleton
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import tech.tiagoloureiro.bloc.Bloc
 
-class PetBloc
+@Singleton
+class PetListBloc
+@Inject
 constructor(
-    private val petId: Long?,
-    petListBloc: PetListBloc,
+    petRepository: PetRepository,
     private val scope: CoroutineScope,
-) : Bloc<PetState, PetEvent>(PetLoading, scope) {
+) : Bloc<PetListState, PetListEvent>(PetListLoading, scope) {
 
     private val job =
-        petListBloc
-            .state
-            .onEach { state ->
-                when (state) {
-                    is PetListLoaded -> {
-                        if (petId == null) {
-                            add(PetNotFoundEvent)
-                        } else {
-                            val pet = state.pets.firstOrNull { pet -> pet.id == petId }
-                            if (pet != null) {
-                                add(LoadedEvent(pet))
-                            } else {
-                                add(PetNotFoundEvent)
-                            }
-                        }
-                    }
-                    PetListLoading -> {
-                        add(LoadingEvent)
-                    }
-                }
+        petRepository
+            .fetchPets()
+            .onEach { pets ->
+                // artificial delay
+                delay(3000)
+                add(ListLoaded(pets))
             }
             .launchIn(scope)
 
     override suspend fun mapEventToState(
-        event: PetEvent,
-        state: PetState,
-        emit: suspend (state: PetState) -> Unit
+        event: PetListEvent,
+        state: PetListState,
+        emit: suspend (state: PetListState) -> Unit
     ) {
         when (event) {
-            is LoadedEvent -> {
-                emit(PetLoaded(event.pet))
-            }
-            LoadingEvent -> {
-                emit(PetLoading)
-            }
-            PetNotFoundEvent -> {
-                emit(PetNotFound)
+            is ListLoaded -> {
+                emit(PetListLoaded(event.pets))
             }
         }
     }
 }
 
 /*
- * PetStates
+ * PetListStates
  *
  */
+sealed class PetListState
 
-sealed class PetState
+object PetListLoading : PetListState()
 
-object PetLoading : PetState()
-
-data class PetLoaded(val pet: Pet) : PetState()
-
-object PetNotFound : PetState()
+data class PetListLoaded(val pets: List<Pet>) : PetListState()
 
 /*
- * PetEvents
+ * PetListEvents
  *
  */
+sealed class PetListEvent
 
-sealed class PetEvent
-
-private data class LoadedEvent(val pet: Pet) : PetEvent()
-
-private object LoadingEvent : PetEvent()
-
-private object PetNotFoundEvent : PetEvent()
+private data class ListLoaded(val pets: List<Pet>) : PetListEvent()

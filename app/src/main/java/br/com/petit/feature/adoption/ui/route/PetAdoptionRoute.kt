@@ -1,4 +1,4 @@
-package br.com.petit.feature.petAdoption.route
+package br.com.petit.feature.adoption.ui.route
 
 import AdoptionScreen
 import androidx.compose.runtime.Composable
@@ -10,13 +10,13 @@ import androidx.navigation.compose.NamedNavArgument
 import br.com.petit.core.ui.UIRoute
 import br.com.petit.core.ui.util.hiltViewModel
 import br.com.petit.feature.adoption.bloc.CancelAdoption
-import br.com.petit.feature.petAdoption.viewmodel.AdoptionScreenViewModel
+import br.com.petit.feature.adoption.ui.viewmodel.AdoptionScreenViewModel
 
 class PetAdoptionRoute(private val navController: NavController) : UIRoute() {
     override val route = "adoption"
     override val arguments = listOf<NamedNavArgument>()
     @Composable
-    override fun content(navBackStackEntry: NavBackStackEntry) {
+    override fun Content(navBackStackEntry: NavBackStackEntry) {
         val vm: AdoptionScreenViewModel = hiltViewModel(LocalContext.current, navBackStackEntry)
         val adoptionBloc = vm.adoptionBloc
         AdoptionScreen(
@@ -24,6 +24,7 @@ class PetAdoptionRoute(private val navController: NavController) : UIRoute() {
             onCancelPressed = {
                 adoptionBloc.add(CancelAdoption)
                 navController.popBackStack()
-            })
+            },
+            onBackPressed = { navController.popBackStack() })
     }
 }

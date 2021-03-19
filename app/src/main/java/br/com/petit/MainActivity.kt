@@ -7,9 +7,9 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.compose.rememberNavController
 import br.com.petit.core.ui.UIRoute
 import br.com.petit.core.ui.theme.PetitTheme
-import br.com.petit.feature.petAdoption.route.PetAdoptionRoute
+import br.com.petit.feature.adoption.ui.route.PetAdoptionRoute
+import br.com.petit.feature.pet.ui.route.PetGridScreenRoute
 import br.com.petit.feature.petDetails.ui.route.PetDetailsRoute
-import br.com.petit.feature.petList.ui.route.PetListRoute
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -20,17 +20,18 @@ class MainActivity : AppCompatActivity() {
         setContent {
             val navController = rememberNavController()
 
-            val mainRoute = PetListRoute(navController)
+            val petGridRoute = PetGridScreenRoute(navController)
+            val detailsRoute = PetDetailsRoute(navController)
             val adoptionRoute = PetAdoptionRoute(navController)
 
             val routes: List<UIRoute> =
                 listOf(
-                    mainRoute,
-                    PetDetailsRoute(navController),
+                    petGridRoute,
+                    detailsRoute,
                     adoptionRoute,
                 )
 
-            PetitTheme { App(navController, mainRoute.route, routes) }
+            PetitTheme { App(navController, petGridRoute.route, routes) }
         }
     }
 }

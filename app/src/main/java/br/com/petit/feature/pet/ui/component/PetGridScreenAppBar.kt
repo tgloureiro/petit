@@ -19,13 +19,12 @@ import br.com.petit.core.ui.util.ListDensity
 fun MainAppBar(
     listDensity: ListDensity,
     onListDensityClick: (listDensity: ListDensity) -> Unit,
-    onSearchClick: () -> Unit,
 ) {
     TopAppBar(
         title = {
             Image(
                 painter = painterResource(R.drawable.ic_logo_app_bar),
-                contentDescription = "menu",
+                contentDescription = null,
             )
         },
         actions = {

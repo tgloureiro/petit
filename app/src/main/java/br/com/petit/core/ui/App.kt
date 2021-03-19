@@ -10,7 +10,7 @@ fun App(navController: NavHostController, startDestination: String, routes: List
             composable(
                 route = uiRoute.route,
                 arguments = uiRoute.arguments,
-                content = { uiRoute.content(it) })
+                content = { uiRoute.Content(it) })
         }
     }
 }

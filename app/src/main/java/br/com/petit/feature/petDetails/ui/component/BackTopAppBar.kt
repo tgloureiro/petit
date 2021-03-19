@@ -19,13 +19,16 @@ import br.com.petit.R
 
 @Composable
 fun BackAppBar(title: String, onBackPressed: () -> Unit) {
+    val backButtonTestTag = stringResource(id = R.string.back_button_test_tag)
     Row(modifier = Modifier.fillMaxWidth()) {
         CompositionLocalProvider(LocalContentAlpha provides ContentAlpha.medium) {
             IconButton(
-                onClick = onBackPressed, modifier = Modifier.semantics { testTag = "backButton" }) {
+                onClick = onBackPressed,
+                modifier = Modifier.semantics { testTag = backButtonTestTag }) {
                 Icon(
                     Icons.Filled.ArrowBack,
-                    contentDescription = stringResource(id = R.string.app_name))
+                    contentDescription =
+                        stringResource(id = R.string.back_action_content_description))
             }
         }
         Text(

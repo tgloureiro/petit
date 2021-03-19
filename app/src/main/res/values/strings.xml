@@ -1,3 +1,28 @@
 <resources>
     <string name="app_name">Petit</string>
+    <string name="error_loading_pet">Error loading pet</string>
+    <string name="error_loading_adoption">Error loading adoption</string>
+    <string name="error_adoption_not_found">Error: adopted pet not found.</string>
+
+    <string name="about_male_pet">About him</string>
+    <string name="about_female_pet">About her</string>
+    <string name="cancel_adoption">Cancel adoption</string>
+    <string name="adopt_name">Adopt %1$s</string>
+    <string name="pet_loading_screen_title">Loading pet...</string>
+    <string name="adoption_loading_screen_title">Loading adoption...</string>
+    <string name="no_adoption_screen_title">Adopted Pet Loading Error</string>
+    <string name="pet_not_found">Pet not found</string>
+    <string name="adopted_congratulations">Congratulations! You adopted %1$s</string>
+    <string name="delivery_message">Your new buddy is being comfortably delivered to your house right now.</string>
+    <string name="cancel_button_text">CANCEL</string>
+    <string name="feeling_lucky_button_text">I\'m feeling lucky</string>
+    <string name="back_action_content_description">Back</string>
+
+
+    <string name="pet_not_found_screen_test_tag">pet_not_found_screen</string>
+    <string name="pet_loading_screen_test_tag">pet_loading_screen</string>
+    <string name="pet_loaded_screen_test_tag">pet_loaded_screen</string>
+    <string name="adoption_loading_screen_test_tag">adoption_loading_screen</string>
+    <string name="back_button_test_tag">back_button</string>
+
 </resources>

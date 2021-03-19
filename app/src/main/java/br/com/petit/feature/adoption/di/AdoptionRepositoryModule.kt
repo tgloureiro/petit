@@ -3,7 +3,7 @@ package br.com.petit.feature.adoption.di
 import br.com.petit.core.repository.AppDatabase
 import br.com.petit.feature.adoption.repository.AdoptionDao
 import br.com.petit.feature.adoption.repository.AdoptionRepository
-import br.com.petit.feature.adoption.repository.RoomAdoptionRepository
+import br.com.petit.feature.adoption.repository.SimpleAdoptionRepository
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -18,9 +18,15 @@ object AdoptionRepositoryModule {
         return appDatabase.adoptionDao()
     }
 
-    @Provides
+    /*@Provides
     @Singleton
     fun provideAdoptionRepository(adoptionDao: AdoptionDao): AdoptionRepository {
         return RoomAdoptionRepository(adoptionDao)
+    }*/
+
+    @Provides
+    @Singleton
+    fun provideAdoptionRepository(): AdoptionRepository {
+        return SimpleAdoptionRepository()
     }
 }

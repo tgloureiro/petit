@@ -4,6 +4,10 @@ import br.com.petit.core.bloc.*
 import br.com.petit.feature.pet.bloc.*
 import br.com.petit.feature.pet.model.Pet
 import br.com.petit.feature.pet.model.PetGender
+import br.com.petit.feature.petDetails.bloc.PetBloc
+import br.com.petit.feature.petDetails.bloc.PetLoaded
+import br.com.petit.feature.petDetails.bloc.PetLoading
+import br.com.petit.feature.petDetails.bloc.PetNotFound
 import com.google.common.truth.Truth.assertThat
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.ExperimentalCoroutinesApi

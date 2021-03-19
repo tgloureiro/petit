@@ -15,7 +15,9 @@ import javax.inject.Singleton
 object AppRepositoryModule {
     @Provides
     @Singleton
-    fun providePetDatabase(@ApplicationContext appContext: Context): AppDatabase {
-        return Room.databaseBuilder(appContext, AppDatabase::class.java, "Petit").build()
+    fun provideAppDatabase(@ApplicationContext appContext: Context): AppDatabase {
+        return Room.databaseBuilder(appContext, AppDatabase::class.java, "Petit")
+            .createFromAsset("Petit.db")
+            .build()
     }
 }

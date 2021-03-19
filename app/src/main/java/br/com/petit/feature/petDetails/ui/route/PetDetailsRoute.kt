@@ -1,19 +1,24 @@
 package br.com.petit.feature.petDetails.ui.route
 
-import DetailsScreen
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
+import PetDetailsScreen
+import androidx.compose.runtime.*
 import androidx.compose.ui.platform.LocalContext
 import androidx.navigation.NavBackStackEntry
 import androidx.navigation.NavController
 import androidx.navigation.NavType
 import androidx.navigation.compose.navArgument
 import androidx.navigation.compose.navigate
+import androidx.navigation.compose.popUpTo
 import br.com.petit.core.ui.UIRoute
 import br.com.petit.core.ui.util.hiltViewModel
 import br.com.petit.feature.adoption.bloc.Adopt
+import br.com.petit.feature.adoption.bloc.CancelAdoption
+import br.com.petit.feature.adoption.bloc.ValidAdoption
 import br.com.petit.feature.pet.model.Pet
+import br.com.petit.feature.pet.ui.route.PetGridScreenRoute
 import br.com.petit.feature.petDetails.viewmodel.DetailsScreenViewModel
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
 
 class PetDetailsRoute(private val navController: NavController) : UIRoute() {
     companion object {
@@ -23,7 +28,7 @@ class PetDetailsRoute(private val navController: NavController) : UIRoute() {
     override val route = "$routeRoot/{$argumentName}"
     override val arguments = listOf(navArgument(argumentName) { type = NavType.LongType })
     @Composable
-    override fun content(navBackStackEntry: NavBackStackEntry) {
+    override fun Content(navBackStackEntry: NavBackStackEntry) {
         navBackStackEntry.savedStateHandle.set(
             argumentName, navBackStackEntry.arguments?.getLong(argumentName))
 
@@ -33,12 +38,29 @@ class PetDetailsRoute(private val navController: NavController) : UIRoute() {
         val petBloc = detailsScreenViewModel.petBloc
         val adoptionBloc = detailsScreenViewModel.adoptionBloc
         val state = petBloc.state.collectAsState()
-        val onBackPressed: () -> Unit = { navController.popBackStack() }
-        val onAdoptPressed: (Pet) -> Unit = { pet ->
-            adoptionBloc.add(Adopt(pet))
-            navController.navigate("adoption")
+        val adoptionState = adoptionBloc.state.collectAsState()
+
+        val coroutineScope = rememberCoroutineScope()
+
+        LaunchedEffect(coroutineScope) {
+            val navJob =
+                adoptionBloc
+                    .transition
+                    .onEach {
+                        if (it.newState is ValidAdoption) {
+                            navController.navigate("adoption") {
+                                popUpTo(PetGridScreenRoute.routeRoot) { inclusive = false }
+                            }
+                        }
+                    }
+                    .launchIn(coroutineScope)
         }
 
-        DetailsScreen(state, onBackPressed, onAdoptPressed)
+        val onBackPressed: () -> Unit = { navController.popBackStack() }
+        val onAdoptPressed: (Pet) -> Unit = { pet -> adoptionBloc.add(Adopt(pet)) }
+        val onCancelAdoptionPressed: () -> Unit = { adoptionBloc.add(CancelAdoption) }
+
+        PetDetailsScreen(
+            state, adoptionState, onBackPressed, onAdoptPressed, onCancelAdoptionPressed)
     }
 }

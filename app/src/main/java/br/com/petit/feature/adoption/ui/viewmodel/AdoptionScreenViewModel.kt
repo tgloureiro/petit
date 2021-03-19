@@ -1,4 +1,4 @@
-package br.com.petit.feature.petAdoption.viewmodel
+package br.com.petit.feature.adoption.ui.viewmodel
 
 import androidx.lifecycle.LifecycleObserver
 import androidx.lifecycle.ViewModel

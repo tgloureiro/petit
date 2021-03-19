@@ -7,5 +7,5 @@ import androidx.navigation.compose.NamedNavArgument
 abstract class UIRoute() {
     abstract val route: String
     abstract val arguments: List<NamedNavArgument>
-    @Composable abstract fun content(navBackStackEntry: NavBackStackEntry)
+    @Composable abstract fun Content(navBackStackEntry: NavBackStackEntry)
 }
