@@ -5,10 +5,13 @@ buildscript {
         room_version = '2.3.0-beta03'
         kotlin_version = '1.4.31'
         coroutinesVersion = '1.4.1'
+        android_bloc_version = '0.1.2'
+
     }
     repositories {
         google()
         mavenCentral()
+        maven { url 'https://www.jitpack.io' }
     }
     dependencies {
         classpath 'com.android.tools.build:gradle:7.0.0-alpha11'
