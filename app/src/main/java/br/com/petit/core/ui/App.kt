@@ -8,7 +8,7 @@ fun App(navController: NavHostController, startDestination: String, routes: List
     NavHost(navController, startDestination = startDestination) {
         routes.onEach { uiRoute ->
             composable(
-                route = uiRoute.route,
+                route = uiRoute.routeName,
                 arguments = uiRoute.arguments,
                 content = { uiRoute.Content(it) })
         }

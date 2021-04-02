@@ -31,7 +31,7 @@ class MainActivity : AppCompatActivity() {
                     adoptionRoute,
                 )
 
-            PetitTheme { App(navController, petGridRoute.route, routes) }
+            PetitTheme { App(navController, petGridRoute.routeName, routes) }
         }
     }
 }

@@ -14,42 +14,31 @@ import br.com.petit.feature.pet.bloc.Next
 import br.com.petit.feature.pet.bloc.RandomPetId
 import br.com.petit.feature.pet.model.Pet
 import br.com.petit.feature.pet.ui.screen.MainScreen
+import br.com.petit.feature.pet.ui.screen.PetGridScreenHolder
 import br.com.petit.feature.pet.ui.viewmodel.PetGridScreenViewModel
 import br.com.petit.feature.petDetails.ui.route.PetDetailsRoute
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 
 class PetGridScreenRoute(private val navController: NavController) : UIRoute() {
-  override val route = routeRoot
+  override val routeName = routeRoot
   override val arguments: List<NamedNavArgument> = listOf()
 
   @Composable
   override fun Content(navBackStackEntry: NavBackStackEntry) {
     val vm: PetGridScreenViewModel = hiltViewModel(LocalContext.current, navBackStackEntry)
+
     val bloc = vm.petListBloc
     val feelingLuckyBloc = vm.feelingLuckyBloc
     val adoptionBloc = vm.adoptionBloc
 
-    LaunchedEffect(vm.feelingLuckyBloc) {
-      feelingLuckyBloc
-          .transition
-          .onEach { transition ->
-            val state = transition.newState
-            if (state is RandomPetId) {
-              val petId = state.petId
-              navController.navigate("${PetDetailsRoute.routeRoot}/$petId")
-            }
-          }
-          .launchIn(this)
-    }
 
-    val onNavigateToPetDetails: (Long) -> Unit = { petId ->
-      navController.navigate("${PetDetailsRoute.routeRoot}/$petId")
-    }
-
-    val onFeelingLucky: (pets: List<Pet>) -> Unit = { pets -> feelingLuckyBloc.add(Next(pets)) }
-
-    MainScreen(bloc.state.collectAsState(),adoptionBloc.state.collectAsState(), onNavigateToPetDetails, onFeelingLucky)
+    PetGridScreenHolder(
+      navController,
+      bloc,
+      feelingLuckyBloc,
+      adoptionBloc
+    )
   }
 
   companion object {
