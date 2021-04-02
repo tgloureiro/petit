@@ -1,6 +1,5 @@
 package br.com.petit.feature.petDetails.ui.component
 
-import BackAppBar
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth

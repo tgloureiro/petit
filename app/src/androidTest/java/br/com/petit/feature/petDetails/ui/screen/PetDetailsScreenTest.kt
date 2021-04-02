@@ -1,6 +1,5 @@
 package br.com.petit.feature.petDetails.ui.screen
 
-import PetDetailsScreen
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.ui.res.stringResource
@@ -73,16 +72,7 @@ class PetDetailsScreenTest {
 
     @Test
     fun notFound_showPetNotFound() {
-        val pet =
-            Pet(
-                id = 22,
-                name = "Ruby",
-                pictureUrl = "abc",
-                petGender = PetGender.FEMALE,
-                description = null)
-
         val stateFlow = MutableStateFlow<PetState>(PetNotFound)
-
         val adoptionState = mutableStateOf<AdoptionState>(NoAdoption)
 
         var petNotFoundScreenTestTag = ""

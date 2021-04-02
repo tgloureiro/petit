@@ -15,14 +15,15 @@ class AdoptionBloc
 @Inject
 constructor(
     private val adoptionRepository: AdoptionRepository,
-    private val scope: CoroutineScope,
+    scope: CoroutineScope,
 ) : Bloc<AdoptionState, AdoptionEvent>(AdoptionLoading, scope) {
 
-    private val job =
+    init{
         adoptionRepository
             .getAdoptedPet()
             .onEach { adoption -> add(UpdateAdoption(adoption)) }
             .launchIn(scope)
+    }
 
     override suspend fun mapEventToState(
         event: AdoptionEvent,

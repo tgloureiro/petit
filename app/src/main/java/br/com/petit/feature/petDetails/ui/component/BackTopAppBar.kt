@@ -1,3 +1,5 @@
+package br.com.petit.feature.petDetails.ui.component
+
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding

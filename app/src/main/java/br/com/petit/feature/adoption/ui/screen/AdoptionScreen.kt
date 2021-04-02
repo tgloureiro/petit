@@ -48,8 +48,8 @@ fun AdoptionScreenPreview() {
             PetGender.MALE,
             "Description")
 
-    val loadingState = mutableStateOf<AdoptionState>(AdoptionLoading)
-    val noAdoptionState = mutableStateOf<AdoptionState>(NoAdoption)
+    /*val loadingState = mutableStateOf<AdoptionState>(AdoptionLoading)
+    val noAdoptionState = mutableStateOf<AdoptionState>(NoAdoption)*/
     val validAdoptionState = mutableStateOf<AdoptionState>(ValidAdoption(Adoption(0, pet)))
     PetitTheme { AdoptionScreen(validAdoptionState, {}, {}) }
 }

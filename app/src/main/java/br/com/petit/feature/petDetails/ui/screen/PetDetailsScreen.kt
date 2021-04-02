@@ -1,3 +1,5 @@
+package br.com.petit.feature.petDetails.ui.screen
+
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.State
@@ -65,7 +67,7 @@ fun DetailsScreenPreview() {
             Adoption(0, pet)
         ))
 
-    PetitTheme() {
+    PetitTheme {
         PetDetailsScreen(
             petState,
             adoptionState,

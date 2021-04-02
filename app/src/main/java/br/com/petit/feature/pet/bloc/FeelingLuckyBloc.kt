@@ -6,7 +6,7 @@ import tech.tiagoloureiro.bloc.Bloc
 
 class FeelingLuckyBloc
 constructor(
-    private val scope: CoroutineScope,
+    scope: CoroutineScope,
 ) : Bloc<FeelingLuckyState, FeelingLuckyEvent>(NoPet, scope) {
 
   override suspend fun mapEventToState(

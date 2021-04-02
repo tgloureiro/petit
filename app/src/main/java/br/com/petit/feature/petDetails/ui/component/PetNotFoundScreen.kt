@@ -1,6 +1,5 @@
 package br.com.petit.feature.petDetails.ui.component
 
-import BackAppBar
 import androidx.compose.material.Scaffold
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable

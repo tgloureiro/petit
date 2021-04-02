@@ -1,3 +1,5 @@
+package br.com.petit.feature.petDetails.ui.screen
+
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
@@ -24,7 +26,6 @@ fun PetDetailsScreenHolder(
     val coroutineScope = rememberCoroutineScope()
 
     LaunchedEffect(coroutineScope) {
-        val navJob =
             adoptionBloc
                 .transition
                 .onEach {

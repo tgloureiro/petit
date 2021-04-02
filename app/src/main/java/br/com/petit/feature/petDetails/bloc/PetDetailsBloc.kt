@@ -13,10 +13,10 @@ class PetBloc
 constructor(
     private val petId: Long?,
     petListBloc: PetListBloc,
-    private val scope: CoroutineScope,
+    scope: CoroutineScope,
 ) : Bloc<PetState, PetEvent>(PetLoading, scope) {
 
-    private val job =
+    init{
         petListBloc
             .state
             .onEach { state ->
@@ -39,6 +39,8 @@ constructor(
                 }
             }
             .launchIn(scope)
+    }
+
 
     override suspend fun mapEventToState(
         event: PetEvent,

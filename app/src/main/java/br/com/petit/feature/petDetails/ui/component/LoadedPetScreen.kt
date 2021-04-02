@@ -1,6 +1,5 @@
 package br.com.petit.feature.petDetails.ui.component
 
-import BackAppBar
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
@@ -57,7 +56,7 @@ fun LoadedPetScreen(
         },
         bottomBar = {
             if (adoptionState.value is ValidAdoption &&
-                ((adoptionState.value as ValidAdoption).adoption.pet?.id == pet.id)) {
+                ((adoptionState.value as ValidAdoption).adoption.pet.id == pet.id)) {
                 Box(
                     contentAlignment = Alignment.Center,
                     modifier = Modifier.fillMaxWidth().background(color = Color(0xDDFFFFFF))) {
@@ -109,7 +108,7 @@ fun LoadedPetScreen(
                         }
                     },
                 )
-                Column() {
+                Column{
                     Text(
                         modifier =
                             Modifier.padding(start = 16.dp, end = 16.dp, top = 0.dp, bottom = 0.dp),
@@ -191,5 +190,5 @@ fun DetailsLoadedPetPreview() {
             "Description")
 
     val adoptionState = mutableStateOf<AdoptionState>(NoAdoption)
-    PetitTheme() { LoadedPetScreen(pet, adoptionState, {}, {}, {}) }
+    PetitTheme { LoadedPetScreen(pet, adoptionState, {}, {}, {}) }
 }

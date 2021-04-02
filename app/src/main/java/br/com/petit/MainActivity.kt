@@ -1,6 +1,6 @@
 package br.com.petit
 
-import App
+import br.com.petit.core.ui.App
 import android.os.Bundle
 import androidx.activity.compose.setContent
 import androidx.appcompat.app.AppCompatActivity

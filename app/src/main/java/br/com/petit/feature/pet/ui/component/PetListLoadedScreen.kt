@@ -1,6 +1,5 @@
 package br.com.petit.feature.pet.ui.component
 
-import MainAppBar
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -11,15 +10,12 @@ import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Star
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
@@ -30,7 +26,6 @@ import br.com.petit.R
 import br.com.petit.core.ui.theme.PetitTheme
 import br.com.petit.core.ui.util.ListDensity
 import br.com.petit.feature.adoption.bloc.AdoptionState
-import br.com.petit.feature.adoption.bloc.NoAdoption
 import br.com.petit.feature.adoption.bloc.ValidAdoption
 import br.com.petit.feature.adoption.model.Adoption
 import br.com.petit.feature.pet.model.Pet
@@ -112,7 +107,7 @@ fun PetListLoadedScreen(
                     }
                 }
               }
-              Column() {
+              Column{
                 Text(
                     modifier =
                         Modifier.padding(start = 16.dp, end = 16.dp, top = 4.dp, bottom = 0.dp),
@@ -194,8 +189,7 @@ fun PetListLoadedScreenPreview() {
           PetGender.MALE,
           "Description")
 
-  val adoptionState = mutableStateOf<AdoptionState>(NoAdoption)
-  PetitTheme() {
+  PetitTheme{
     PetListLoadedScreen(
         ValidAdoption(Adoption(0, pet)),
         listOf(pet, pet, pet, pet, pet),

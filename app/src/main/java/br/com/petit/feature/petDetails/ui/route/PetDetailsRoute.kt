@@ -1,6 +1,6 @@
 package br.com.petit.feature.petDetails.ui.route
 
-import PetDetailsScreenHolder
+import br.com.petit.feature.petDetails.ui.screen.PetDetailsScreenHolder
 import androidx.compose.runtime.*
 import androidx.compose.ui.platform.LocalContext
 import androidx.navigation.NavBackStackEntry

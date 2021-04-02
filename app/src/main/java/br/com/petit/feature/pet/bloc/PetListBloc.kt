@@ -15,10 +15,10 @@ class PetListBloc
 @Inject
 constructor(
     petRepository: PetRepository,
-    private val scope: CoroutineScope,
+    scope: CoroutineScope,
 ) : Bloc<PetListState, PetListEvent>(PetListLoading, scope) {
 
-    private val job =
+    init{
         petRepository
             .fetchPets()
             .onEach { pets ->
@@ -27,6 +27,8 @@ constructor(
                 add(ListLoaded(pets))
             }
             .launchIn(scope)
+    }
+
 
     override suspend fun mapEventToState(
         event: PetListEvent,
