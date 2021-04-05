@@ -8,7 +8,9 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.*
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
@@ -55,8 +57,12 @@ fun ValidAdoptionScreen(pet: Pet, onBackPressed: () -> Unit, onCancelPressed: ()
                     Modifier.padding(horizontal = 16.dp, vertical = 4.dp)
                         .aspectRatio(1.305f)
                         .widthIn(max = 128.dp)
-                        .shadow(8.dp, shape = RoundedCornerShape(16.dp), clip = true),
-                contentScale = ContentScale.Crop)
+                        .clip(shape = RoundedCornerShape(16.dp)),
+                contentScale = ContentScale.Crop) {
+                Box(Modifier.matchParentSize()) {
+                    CircularProgressIndicator(Modifier.align(Alignment.Center))
+                }
+            }
 
             Image(
                 painterResource(R.drawable.map),
