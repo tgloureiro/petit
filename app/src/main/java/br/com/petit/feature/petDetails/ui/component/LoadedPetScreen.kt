@@ -32,7 +32,7 @@ import br.com.petit.feature.adoption.bloc.NoAdoption
 import br.com.petit.feature.adoption.bloc.ValidAdoption
 import br.com.petit.feature.pet.model.Pet
 import br.com.petit.feature.pet.model.PetGender
-import dev.chrisbanes.accompanist.coil.CoilImage
+import com.google.accompanist.glide.GlideImage
 import java.util.*
 
 @Composable
@@ -94,7 +94,7 @@ fun LoadedPetScreen(
                     .fillMaxHeight()
                     .verticalScroll(rememberScrollState())) {
             Row(modifier = Modifier.height(196.dp).padding(vertical = 12.dp)) {
-                CoilImage(
+                GlideImage(
                     data = pet.pictureUrl,
                     "Pet photo",
                     modifier =

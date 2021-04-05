@@ -30,7 +30,7 @@ import br.com.petit.feature.adoption.bloc.ValidAdoption
 import br.com.petit.feature.adoption.model.Adoption
 import br.com.petit.feature.pet.model.Pet
 import br.com.petit.feature.pet.model.PetGender
-import dev.chrisbanes.accompanist.coil.CoilImage
+import com.google.accompanist.glide.GlideImage
 import java.util.*
 
 @ExperimentalFoundationApi
@@ -82,7 +82,7 @@ fun PetListLoadedScreen(
                         .padding(horizontal = 24.dp, vertical = 12.dp)
                         .clickable { navigateToPetDetails(pet.id) }) {
               Box {
-                CoilImage(
+                  GlideImage(
                     data = pet.pictureUrl,
                     "Grid",
                     modifier =
@@ -132,7 +132,7 @@ fun PetListLoadedScreen(
                       navigateToPetDetails(pet.id)
                     }) {
               Box {
-                CoilImage(
+                  GlideImage(
                     data = pet.pictureUrl,
                     "Grid",
                     modifier =

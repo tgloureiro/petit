@@ -22,7 +22,7 @@ import br.com.petit.R
 import br.com.petit.core.ui.theme.PetitTheme
 import br.com.petit.feature.pet.model.Pet
 import br.com.petit.feature.pet.model.PetGender
-import dev.chrisbanes.accompanist.coil.CoilImage
+import com.google.accompanist.glide.GlideImage
 import java.util.*
 
 @Composable
@@ -48,7 +48,7 @@ fun ValidAdoptionScreen(pet: Pet, onBackPressed: () -> Unit, onCancelPressed: ()
                 fontSize = 36.sp,
                 fontWeight = FontWeight.Bold,
                 textAlign = TextAlign.Center)
-            CoilImage(
+            GlideImage(
                 data = pet.pictureUrl,
                 contentDescription = null,
                 modifier =
