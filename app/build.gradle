@@ -1,10 +1,8 @@
-import org.jetbrains.kotlin.gradle.plugin.KotlinPluginKt
-
 plugins {
     id 'com.android.application'
     id 'kotlin-android'
-    id 'kotlin-android-extensions'
     id 'kotlin-kapt'
+    id 'kotlin-parcelize'
     id 'dagger.hilt.android.plugin'
 }
 
@@ -37,8 +35,13 @@ android {
         jvmTarget = '1.8'
         useIR = true
     }
-
-
+    buildFeatures {
+        // Enables Jetpack Compose for this module
+        compose true
+    }
+    composeOptions {
+        kotlinCompilerExtensionVersion '1.0.1'
+    }
     packagingOptions {
         exclude 'META-INF/DEPENDENCIES'
         exclude 'META-INF/LICENSE'
@@ -61,7 +64,6 @@ android {
 }
 
 dependencies {
-    add(KotlinPluginKt.PLUGIN_CLASSPATH_CONFIGURATION_NAME, "androidx.compose.compiler:compiler:${compose_version}")
     implementation "androidx.compose.runtime:runtime:${compose_version}"
 
     implementation "com.github.tgloureiro:android-bloc:$android_bloc_version"
@@ -89,7 +91,6 @@ dependencies {
     kapt "com.google.dagger:hilt-compiler:$hilt_version"
     implementation "androidx.hilt:hilt-lifecycle-viewmodel:1.0.0-alpha03"
     implementation "androidx.hilt:hilt-navigation:1.0.0"
-
     kapt "androidx.hilt:hilt-compiler:1.0.0"
 
     androidTestImplementation("androidx.compose.ui:ui-test-junit4:$compose_version")
@@ -108,9 +109,9 @@ dependencies {
     testImplementation 'org.mockito:mockito-inline:3.3.3'
     testImplementation 'junit:junit:4.13.2'
     // For Robolectric tests.
-    testImplementation 'com.google.dagger:hilt-android-testing:2.33-beta'
+    testImplementation "com.google.dagger:hilt-android-testing:$hilt_version"
     // ...with Kotlin.
-    kaptTest 'com.google.dagger:hilt-android-compiler:2.33-beta'
+    kaptTest "com.google.dagger:hilt-android-compiler:$hilt_version"
 
     // Use the most recent version of Compose available.
     debugImplementation "androidx.compose.ui:ui-tooling:${compose_version}"

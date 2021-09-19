@@ -1,5 +1,6 @@
 package br.com.petit.feature.petDetails.ui.screen
 
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
@@ -15,6 +16,7 @@ import br.com.petit.feature.petDetails.bloc.PetBloc
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 
+@ExperimentalFoundationApi
 @Composable
 fun PetDetailsScreenHolder(
     navController: NavController,

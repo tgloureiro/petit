@@ -1,5 +1,6 @@
 package br.com.petit.feature.petDetails.ui.route
 
+import androidx.compose.foundation.ExperimentalFoundationApi
 import br.com.petit.feature.petDetails.ui.screen.PetDetailsScreenHolder
 import androidx.compose.runtime.*
 import androidx.compose.ui.platform.LocalContext
@@ -11,6 +12,7 @@ import br.com.petit.core.ui.UIRoute
 import br.com.petit.core.ui.util.hiltViewModel
 import br.com.petit.feature.petDetails.viewmodel.DetailsScreenViewModel
 
+@ExperimentalFoundationApi
 class PetDetailsRoute(private val navController: NavController) : UIRoute() {
   companion object {
     const val routeRoot = "pet"

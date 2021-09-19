@@ -14,7 +14,7 @@ import br.com.petit.feature.pet.model.Pet
 import br.com.petit.feature.pet.ui.component.PetListLoadedScreen
 import br.com.petit.feature.pet.ui.component.PetListLoadingScreen
 
-@OptIn(ExperimentalFoundationApi::class)
+@ExperimentalFoundationApi
 @Composable
 fun MainScreen(
     petListState: State<PetListState>,
