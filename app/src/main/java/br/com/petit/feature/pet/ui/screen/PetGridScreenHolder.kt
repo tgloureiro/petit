@@ -16,7 +16,7 @@ import br.com.petit.feature.petDetails.ui.route.PetDetailsRoute
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 
-@OptIn(ExperimentalFoundationApi::class)
+@ExperimentalFoundationApi
 @Composable
 fun PetGridScreenHolder(
     navController: NavController,
