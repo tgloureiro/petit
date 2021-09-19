@@ -5,8 +5,6 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.navigation.NavController
-import androidx.navigation.compose.navigate
-import androidx.navigation.compose.popUpTo
 import br.com.petit.feature.adoption.bloc.Adopt
 import br.com.petit.feature.adoption.bloc.AdoptionBloc
 import br.com.petit.feature.adoption.bloc.CancelAdoption

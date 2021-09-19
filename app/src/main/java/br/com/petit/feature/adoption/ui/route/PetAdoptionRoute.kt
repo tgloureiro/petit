@@ -3,9 +3,9 @@ package br.com.petit.feature.adoption.ui.route
 import AdoptionScreenHolder
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.platform.LocalContext
+import androidx.navigation.NamedNavArgument
 import androidx.navigation.NavBackStackEntry
 import androidx.navigation.NavController
-import androidx.navigation.compose.NamedNavArgument
 import br.com.petit.core.ui.UIRoute
 import br.com.petit.core.ui.util.hiltViewModel
 import br.com.petit.feature.adoption.ui.viewmodel.AdoptionScreenViewModel
