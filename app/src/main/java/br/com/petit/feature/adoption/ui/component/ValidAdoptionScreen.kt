@@ -22,9 +22,10 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import br.com.petit.R
 import br.com.petit.core.ui.theme.PetitTheme
+import br.com.petit.core.ui.components.ImageNotLoaded
 import br.com.petit.feature.pet.model.Pet
 import br.com.petit.feature.pet.model.PetGender
-import com.google.accompanist.glide.GlideImage
+import com.skydoves.landscapist.glide.GlideImage
 import java.util.*
 
 @Composable
@@ -46,23 +47,27 @@ fun ValidAdoptionScreen(pet: Pet, onBackPressed: () -> Unit, onCancelPressed: ()
                     Modifier.padding(start = 16.dp, end = 16.dp, top = 16.dp, bottom = 16.dp),
                 text =
                     stringResource(
-                        R.string.adopted_congratulations, pet.name.capitalize(Locale.getDefault())),
+                        R.string.adopted_congratulations,
+                        pet.name.replaceFirstChar { if (it.isLowerCase()) it.titlecase(Locale.getDefault()) else it.toString() }),
                 fontSize = 36.sp,
                 fontWeight = FontWeight.Bold,
                 textAlign = TextAlign.Center)
             GlideImage(
-                data = pet.pictureUrl,
+                imageModel = pet.pictureUrl,
                 contentDescription = null,
+                failure = { ImageNotLoaded() },
                 modifier =
                     Modifier.padding(horizontal = 16.dp, vertical = 4.dp)
                         .aspectRatio(1.305f)
                         .widthIn(max = 128.dp)
                         .clip(shape = RoundedCornerShape(16.dp)),
-                contentScale = ContentScale.Crop) {
-                Box(Modifier.matchParentSize()) {
-                    CircularProgressIndicator(Modifier.align(Alignment.Center))
+                contentScale = ContentScale.Crop,
+                loading = {
+                    Box(Modifier.fillMaxSize()) {
+                        CircularProgressIndicator(Modifier.align(Alignment.Center))
+                    }
                 }
-            }
+            )
 
             Image(
                 painterResource(R.drawable.map),

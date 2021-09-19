@@ -6,7 +6,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.navigation.NavBackStackEntry
 import androidx.navigation.NavController
 import androidx.navigation.NavType
-import androidx.navigation.compose.navArgument
+import androidx.navigation.navArgument
 import br.com.petit.core.ui.UIRoute
 import br.com.petit.core.ui.util.hiltViewModel
 import br.com.petit.feature.petDetails.viewmodel.DetailsScreenViewModel

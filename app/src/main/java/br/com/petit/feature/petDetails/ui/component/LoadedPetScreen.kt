@@ -13,6 +13,7 @@ import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -27,12 +28,13 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import br.com.petit.R
 import br.com.petit.core.ui.theme.PetitTheme
+import br.com.petit.core.ui.components.ImageNotLoaded
 import br.com.petit.feature.adoption.bloc.AdoptionState
 import br.com.petit.feature.adoption.bloc.NoAdoption
 import br.com.petit.feature.adoption.bloc.ValidAdoption
 import br.com.petit.feature.pet.model.Pet
 import br.com.petit.feature.pet.model.PetGender
-import com.google.accompanist.glide.GlideImage
+import com.skydoves.landscapist.glide.GlideImage
 import java.util.*
 
 @Composable
@@ -80,7 +82,10 @@ fun LoadedPetScreen(
                             // Interpolate string resource with pet's name
                             text =
                                 stringResource(
-                                    R.string.adopt_name, pet.name.capitalize(Locale.getDefault())),
+                                    R.string.adopt_name,
+                                    pet.name.replaceFirstChar {
+                                        if (it.isLowerCase()) it.titlecase(Locale.getDefault()) else it.toString()
+                                    }),
                             modifier = Modifier.padding(vertical = 8.dp),
                             fontSize = 20.sp)
                     }
@@ -95,18 +100,19 @@ fun LoadedPetScreen(
                     .verticalScroll(rememberScrollState())) {
             Row(modifier = Modifier.height(196.dp).padding(vertical = 12.dp)) {
                 GlideImage(
-                    data = pet.pictureUrl,
-                    "Pet photo",
+                    imageModel = pet.pictureUrl,
+                    contentDescription = "Pet photo",
                     modifier =
                         Modifier.padding(horizontal = 16.dp, vertical = 4.dp)
                             .aspectRatio(1.305f)
                             .clip(RoundedCornerShape(16.dp)),
                     contentScale = ContentScale.Crop,
                     loading = {
-                        Box(Modifier.matchParentSize()) {
+                        Box(Modifier.fillMaxSize()) {
                             CircularProgressIndicator(Modifier.align(Alignment.Center))
                         }
                     },
+                    failure = { ImageNotLoaded() },
                 )
                 Column{
                     Text(
@@ -123,7 +129,9 @@ fun LoadedPetScreen(
                         fontSize = 16.sp,
                         maxLines = 1,
                         color = Color(0xFF777777),
-                        text = pet.petGender.name.capitalize(Locale.getDefault()))
+                        text = pet.petGender.name.replaceFirstChar {
+                            if (it.isLowerCase()) it.titlecase(Locale.getDefault()) else it.toString()
+                        })
                 }
             }
 
@@ -189,6 +197,6 @@ fun DetailsLoadedPetPreview() {
             PetGender.MALE,
             "Description")
 
-    val adoptionState = mutableStateOf<AdoptionState>(NoAdoption)
+    val adoptionState = remember {mutableStateOf<AdoptionState>(NoAdoption)}
     PetitTheme { LoadedPetScreen(pet, adoptionState, {}, {}, {}) }
 }

@@ -6,7 +6,6 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.navigation.NavController
-import androidx.navigation.compose.navigate
 import br.com.petit.feature.adoption.bloc.AdoptionBloc
 import br.com.petit.feature.pet.bloc.FeelingLuckyBloc
 import br.com.petit.feature.pet.bloc.Next
